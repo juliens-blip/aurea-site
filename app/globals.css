@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Hardening minimal pour le Hero full-bleed */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: clip;
+  background: #0B1B2B;
+}
+
+/* Reset pour enlever les paddings des sections parentes */
+section:has(#aureaHero),
+div:has(> #aureaHero) {
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: none !important;
+}
