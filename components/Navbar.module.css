@@ -1,0 +1,341 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 18px 2%;
+  transition: all 0.4s ease;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-10px);
+}
+
+.navbar.scrolled {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+  background: rgba(11, 27, 43, 0.96);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 2px 30px rgba(0, 0, 0, 0.2);
+  padding: 12px 2%;
+}
+
+.navbarContainer {
+  max-width: 1600px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.navbarLogo {
+  height: 52px;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.navbar.scrolled .navbarLogo {
+  height: 44px;
+}
+
+.navbarLogo img {
+  height: 100%;
+  width: auto;
+  display: block;
+}
+
+.navbarMenu {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  list-style: none;
+  margin-left: auto;
+}
+
+.navbarItem {
+  position: relative;
+}
+
+.navbarLink {
+  color: #FFFFFF;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  transition: all 0.3s ease;
+  padding: 8px 0;
+  display: inline-block;
+  position: relative;
+}
+
+.navbarLink::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #D4AF37, #FFD700);
+  transition: width 0.3s ease;
+}
+
+.navbarLink:hover::after {
+  width: 100%;
+}
+
+.navbarLink:hover {
+  color: #D4AF37;
+}
+
+/* Dropdown */
+.navbarItem.hasDropdown {
+  position: relative;
+}
+
+.navbarDropdownToggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: #FFFFFF;
+  font-size: 0.95rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  transition: all 0.3s ease;
+  padding: 8px 0;
+}
+
+.navbarDropdownToggle:hover {
+  color: #D4AF37;
+}
+
+.dropdownArrow {
+  font-size: 0.65rem;
+  transition: transform 0.3s ease;
+}
+
+.navbarItem.hasDropdown:hover .dropdownArrow,
+.navbarItem.hasDropdown.active .dropdownArrow {
+  transform: rotate(180deg);
+}
+
+.navbarDropdown {
+  position: absolute;
+  top: calc(100% + 15px);
+  left: -20px;
+  min-width: 240px;
+  background: rgba(11, 27, 43, 0.98);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  padding: 12px 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-15px);
+  transition: all 0.3s ease;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+}
+
+.navbarItem.hasDropdown:hover .navbarDropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.navbarDropdownItem {
+  list-style: none;
+}
+
+.navbarDropdownLink {
+  display: block;
+  padding: 14px 28px;
+  color: #D1DCE8;
+  text-decoration: none;
+  font-size: 0.92rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.navbarDropdownLink::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, #D4AF37, #FFD700);
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+}
+
+.navbarDropdownLink:hover {
+  background: rgba(212, 175, 55, 0.1);
+  color: #FFFFFF;
+  padding-left: 32px;
+}
+
+.navbarDropdownLink:hover::before {
+  transform: scaleY(1);
+}
+
+/* CTA Button */
+.navbarCta {
+  padding: 12px 32px;
+  background: linear-gradient(135deg, #D4AF37, #FFD700);
+  color: #0B1B2B;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.navbarCta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.navbarCta:hover::before {
+  left: 100%;
+}
+
+.navbarCta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(212, 175, 55, 0.6);
+}
+
+/* Mobile Menu Toggle */
+.navbarToggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.navbarToggle span {
+  width: 26px;
+  height: 2px;
+  background: #D4AF37;
+  transition: all 0.3s ease;
+}
+
+.navbarToggle.active span:nth-child(1) {
+  transform: rotate(45deg) translate(7px, 7px);
+}
+
+.navbarToggle.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.navbarToggle.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* Mobile Styles */
+@media (max-width: 1100px) {
+  .navbarMenu {
+    gap: 45px;
+  }
+}
+
+@media (max-width: 968px) {
+  .navbar {
+    padding: 16px 4%;
+  }
+
+  .navbar.scrolled {
+    padding: 12px 4%;
+  }
+
+  .navbarToggle {
+    display: flex;
+  }
+
+  .navbarMenu {
+    position: fixed;
+    top: 75px;
+    left: 0;
+    right: 0;
+    background: rgba(11, 27, 43, 0.98);
+    backdrop-filter: blur(20px);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 35px 5vw;
+    gap: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    margin-left: 0;
+  }
+
+  .navbarMenu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .navbarItem {
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 18px 0;
+  }
+
+  .navbarItem:last-child {
+    border-bottom: none;
+  }
+
+  .navbarDropdown {
+    position: static;
+    opacity: 0;
+    visibility: hidden;
+    max-height: 0;
+    overflow: hidden;
+    transform: none;
+    margin-top: 12px;
+    margin-left: 0;
+    left: 0;
+    transition: all 0.3s ease;
+  }
+
+  .navbarItem.hasDropdown.active .navbarDropdown {
+    opacity: 1;
+    visibility: visible;
+    max-height: 600px;
+  }
+
+  .navbarCta {
+    margin-top: 12px;
+    display: inline-block;
+  }
+}
+
+@media (max-width: 640px) {
+  .navbarLogo {
+    height: 42px;
+  }
+
+  .navbar.scrolled .navbarLogo {
+    height: 38px;
+  }
+
+  .navbarMenu {
+    top: 70px;
+    padding: 30px 5vw;
+  }
+}

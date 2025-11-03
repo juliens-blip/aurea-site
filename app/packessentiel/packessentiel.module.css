@@ -1,0 +1,247 @@
+:root {
+  --vw: 100vw;
+  --vh: 100vh;
+}
+
+@supports (width: 100dvw) {
+  :root {
+    --vw: 100dvw;
+    --vh: 100dvh;
+  }
+}
+
+/* HERO */
+.packHero {
+  position: relative;
+  width: var(--vw);
+  height: min(var(--vh), 900px);
+  left: 50%;
+  right: 50%;
+  margin-left: calc(-0.5 * var(--vw));
+  margin-right: calc(-0.5 * var(--vw));
+  overflow: hidden;
+  background: #0B1B2B;
+}
+
+.packVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  z-index: 1;
+}
+
+.packOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(11, 27, 43, .28), rgba(11, 27, 43, .65));
+  z-index: 2;
+  pointer-events: none;
+}
+
+.packContent {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 0 3vw;
+}
+
+.packTitle {
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 200;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #D4AF37, #FFD700, #F4C430, #D4AF37);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  text-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.3);
+  }
+}
+
+.packScroll {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #D4AF37;
+  font-size: 2rem;
+  z-index: 3;
+  animation: bounce 2s infinite;
+  user-select: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.packScrollText {
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  40% {
+    transform: translateX(-50%) translateY(-10px);
+  }
+  60% {
+    transform: translateX(-50%) translateY(-5px);
+  }
+}
+
+/* SECTIONS */
+.packSection {
+  padding: 80px 5vw 0 5vw;
+  background: #FFFFFF;
+}
+
+.packSection:last-child {
+  padding-bottom: 80px;
+}
+
+.packSectionAlt {
+  background: #F8F9FA;
+}
+
+.packContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.packContainerReverse {
+  direction: rtl;
+}
+
+.packContainerReverse > * {
+  direction: ltr;
+}
+
+.packTextContent {
+  padding: 0 20px;
+}
+
+.packSectionTitle {
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 300;
+  color: #1A1A1A;
+  margin: 0 0 1.2rem 0;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+}
+
+.packSectionDescription {
+  font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+  color: #4A4A4A;
+  line-height: 1.7;
+  margin: 0 0 1.5rem 0;
+  font-weight: 300;
+}
+
+.packCta {
+  display: inline-block;
+  padding: 12px 32px;
+  background: linear-gradient(135deg, #D4AF37, #FFD700);
+  color: #1A1A1A;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.packCta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+  background: linear-gradient(135deg, #FFD700, #D4AF37);
+}
+
+.packImageWrapper {
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  border-radius: 6px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+}
+
+.packImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+
+.packImage:hover {
+  transform: scale(1.02);
+}
+
+/* RESPONSIVE */
+@media (max-width: 968px) {
+  .packSection {
+    padding: 60px 5vw;
+  }
+
+  .packContainer {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .packContainerReverse {
+    direction: ltr;
+  }
+
+  .packImageWrapper {
+    order: -1;
+    height: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .packHero {
+    height: min(calc(var(--vh) * 0.72), 600px);
+  }
+}
+
+@media (max-width: 640px) {
+  .packSection {
+    padding: 50px 5vw;
+  }
+
+  .packTextContent {
+    padding: 0;
+  }
+
+  .packImageWrapper {
+    height: 220px;
+  }
+}

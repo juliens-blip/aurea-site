@@ -1,3 +1,22 @@
+:root {
+  --navy-blue: #0B1B2B;
+  --gold-champagne: #C9B17E;
+  --sand-white: #F2E9DE;
+  --pure-white: #FFFFFF;
+  --off-white: #FAF8F5;
+  --transition: all .3s cubic-bezier(.4, 0, .2, 1);
+  --vw: 100vw;
+  --vh: 100vh;
+}
+
+@supports (width: 100dvw) {
+  :root {
+    --vw: 100dvw;
+    --vh: 100dvh;
+  }
+}
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

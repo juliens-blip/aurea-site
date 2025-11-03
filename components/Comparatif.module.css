@@ -1,0 +1,247 @@
+/* components/Comparatif.module.css */
+
+/* ----- Section & conteneurs ----- */
+.comparisonSection {
+  position: relative;
+  width: 100%;
+  margin: 0;               /* plus de left/right 50% */
+  padding: 4rem 0;
+  background-image: url('https://www.dropbox.com/scl/fi/eoagglzpk65ra941ys67y/unnamed-15.jpg?rlkey=z8gj4sp3xqhvxn9icdl200uh9&st=yk90m9tq&dl=1');
+  background-size: cover;
+  background-position: top center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+
+.comparisonSection::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(11, 27, 43, 0.25), rgba(11, 27, 43, 0.55));
+  z-index: 0;
+}
+
+.container {
+  width: min(95%, 1400px);
+  margin-inline: auto;
+  position: relative;
+  z-index: 1;
+  padding: 0;
+}
+
+/* ----- Titres / Filtres ----- */
+.comparisonTitle {
+  text-align: center;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  color: var(--gold-champagne);
+  margin-bottom: 3rem;
+  font-weight: 200;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+.filterButtons {
+  display: flex;
+  justify-content: center;
+  align-items: center;       /* <— ajoute ça */
+  gap: 0;
+  margin: 0 auto 2rem;       /* <— centrage + marge basse */
+  flex-wrap: wrap;
+  border-radius: 50px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, .5);
+  max-width: 100%;           /* <— évite un dépassement */
+  padding: 0;                /* sécurité */
+  border: 1px solid var(--gold-champagne);
+  backdrop-filter: blur(8px);
+  background: rgba(11, 27, 43, 0.6);
+}
+
+
+.filterBtn {
+  padding: .9rem 2rem;
+  background: transparent;
+  border: none;
+  color: var(--gold-champagne);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: .9rem;
+  letter-spacing: .02em;
+  font-family: inherit;
+  font-weight: 500;
+  border-right: 1px solid rgba(201, 177, 126, .3);
+}
+
+.filterBtn:last-child {
+  border-right: none;
+}
+
+.filterBtn:hover {
+  background: rgba(201, 177, 126, .2);
+}
+
+.filterBtn.active {
+  background: var(--gold-champagne);
+  color: var(--navy-blue);
+}
+
+/* ----- Table “scopée” sous .table ----- */
+.comparisonTable {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 0;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .6);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(201, 177, 126, 0.3);
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  width: 100%;
+  min-width: 800px;
+  border-collapse: collapse;
+}
+
+.table thead {
+  background: rgba(201, 177, 126, 0.95);
+}
+
+.table th {
+  padding: 1.5rem 1.5rem;
+  text-align: center;
+  color: var(--navy-blue);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: capitalize;
+  vertical-align: middle;
+  border-right: 1px solid rgba(11, 27, 43, .1);
+}
+
+.table th:first-child {
+  text-align: left;
+  padding-left: 2rem;
+  width: 45%;
+  font-size: 1.05rem;
+}
+
+.table tbody tr {
+  transition: var(--transition);
+  border-bottom: 1px solid rgba(201, 177, 126, .2);
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.table tbody tr.hidden {
+  display: none;
+}
+
+.table tbody tr:hover {
+  background: rgba(201, 177, 126, .25);
+}
+
+.table td {
+  padding: 1.2rem 1.5rem;
+  text-align: center;
+  color: var(--navy-blue);
+  vertical-align: middle;
+  font-size: .95rem;
+  border-right: 1px solid rgba(201, 177, 126, .15);
+}
+
+/* ----- Cellules & états ----- */
+.featureName {
+  text-align: left;
+  font-weight: 600;
+  padding-left: 2rem;
+  color: var(--navy-blue);
+  font-size: .95rem;
+}
+
+.check {
+  color: var(--gold-champagne);
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.cross {
+  color: #999;
+  font-size: 1.2rem;
+  font-weight: normal;
+}
+
+.ctaRow {
+  background: rgba(201, 177, 126, 0.15);
+}
+
+.ctaRow:hover {
+  background: rgba(201, 177, 126, 0.25);
+}
+
+.ctaBtn {
+  display: inline-block;
+  padding: 0.7rem 1.5rem;
+  background: linear-gradient(135deg, #D4AF37, #FFD700);
+  color: var(--navy-blue);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  transition: var(--transition);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.ctaBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+  background: linear-gradient(135deg, #FFD700, #D4AF37);
+}
+
+.note {
+  text-align: center;
+  font-size: .85rem;
+  color: var(--gold-champagne);
+  opacity: 1;
+  margin-top: 2rem;
+  font-style: italic;
+  padding: 0 2rem;
+  line-height: 1.6;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9);
+  font-weight: 500;
+}
+
+/* ----- Responsive ----- */
+@media (max-width: 768px) {
+  .comparisonSection {
+    padding: 2rem 0;
+    background-attachment: scroll;
+  }
+
+  .comparisonTitle {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .table {
+    min-width: 700px;
+  }
+
+  .table th,
+  .table td {
+    padding: .9rem .6rem;
+    font-size: .85rem;
+  }
+
+  .ctaBtn {
+    padding: 0.6rem 1rem;
+    font-size: 0.75rem;
+  }
+}

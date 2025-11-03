@@ -13,9 +13,9 @@ export default function AureaHero() {
         preload="auto"
       >
         <source
-          src="https://www.dropbox.com/scl/fi/imp7gp7537gi0h9z64h0b/202510201238.mp4?rlkey=83c6nj8uoaz7rucx9xzur7tu8&st=m1x86196&dl=1"
-          type="video/mp4"
-        />
+     src="https://res.cloudinary.com/dwzyhcbxg/video/upload/v1762159965/202510201238_1_s58oak.mp4"
+     type="video/mp4"
+   />
       </video>
       
       <div className={styles.aureaOverlay} />
