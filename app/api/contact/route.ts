@@ -1,3 +1,6 @@
+export async function GET() {
+  return NextResponse.json({ ok: true, route: "contact" }, { status: 200 });
+}
 // app/api/contact/route.ts
 import { NextResponse } from "next/server";
 
