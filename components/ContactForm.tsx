@@ -4,13 +4,17 @@ import { useState } from 'react';
 import styles from './ContactForm.module.css';
 
 export default function ContactForm() {
-  const [formData, setFormData] = useState({
-    nom: '',
-    telephone: '',
-    email: '',
-    entreprise: '',
-    website: '' // Honeypot
-  });
+  const res = await fetch('/api/contact', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    nom: formData.nom,
+    email: formData.email,
+    telephone: formData.telephone,
+    entreprise: formData.entreprise,
+  }),
+});
+
   
   const [feedback, setFeedback] = useState({ message: '', type: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
