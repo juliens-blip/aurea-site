@@ -9,10 +9,10 @@ export async function POST(req: Request) {
     }
 
     const baseId = process.env.AIRTABLE_BASE_ID;
-    const tableId = "tblcg6tn9y4DOc8TV"; // Table 4
+    const tableId = process.env.AIRTABLE_LANDING_TABLE_ID;
     const token = process.env.AIRTABLE_TOKEN;
 
-    if (!baseId || !token) {
+    if (!baseId || !tableId || !token) {
       console.error("Variables d'environnement manquantes");
       return NextResponse.json(
         { error: "Configuration serveur manquante" },
