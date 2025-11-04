@@ -2,15 +2,25 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
+    console.log("=== DÉBUT DE LA REQUÊTE API ===");
+    
     const { name, email, phone, company, message } = await req.json();
+    console.log("Données reçues:", { name, email, phone, company, message });
 
     if (!name || !email || !phone || !company || !message) {
+      console.log("Champs manquants");
       return NextResponse.json({ error: "Champs manquants" }, { status: 400 });
     }
 
     const baseId = process.env.AIRTABLE_BASE_ID;
     const tableId = process.env.AIRTABLE_LANDING_TABLE_ID;
     const token = process.env.AIRTABLE_TOKEN;
+
+    console.log("Variables d'env:", {
+      baseId: baseId ? "✓" : "✗",
+      tableId: tableId ? "✓" : "✗",
+      token: token ? "✓" : "✗"
+    });
 
     if (!baseId || !tableId || !token) {
       console.error("Variables d'environnement manquantes");
@@ -42,6 +52,7 @@ export async function POST(req: Request) {
       ],
     };
 
+    console.log("Appel Airtable...");
     const response = await fetch(
       `https://api.airtable.com/v0/${baseId}/${tableId}`,
       {
@@ -54,6 +65,8 @@ export async function POST(req: Request) {
       }
     );
 
+    console.log("Status Airtable:", response.status);
+
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Erreur Airtable:", errorText);
@@ -64,6 +77,7 @@ export async function POST(req: Request) {
     }
 
     const data = await response.json();
+    console.log("Succès Airtable");
     return NextResponse.json(data, { status: 200 });
   } catch (error: any) {
     console.error("Erreur API Landing Contact:", error);

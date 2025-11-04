@@ -42,19 +42,20 @@ export default function LandingContactForm() {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch('/api/landing-contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          company: formData.company,
-          message: formData.message
-        })
-      });
+      const res = await fetch('https://aurea-site-5rppz04ag-juliensimard31-7076s-projects.vercel.app/api/landing-contact', {
+        .vercel.app', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    name: formData.name,
+    email: formData.email,
+    phone: formData.phone,
+    company: formData.company,
+    message: formData.message
+  })
+});
 
       if (!res.ok) {
         const errData = await res.json();
