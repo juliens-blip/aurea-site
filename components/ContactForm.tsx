@@ -21,25 +21,32 @@ export default function ContactForm() {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  // === handleSubmit remplacé selon ta consigne ===
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFeedback({ message: '', type: '' });
 
-    // Honeypot
+    // Honeypot check
     if (formData.website) return;
 
-    // Validation simple
+    // Validation
     if (!formData.nom || !formData.telephone || !formData.email || !formData.entreprise) {
-      setFeedback({ message: 'Merci de remplir tous les champs obligatoires.', type: 'error' });
+      setFeedback({
+        message: 'Merci de remplir tous les champs obligatoires.',
+        type: 'error'
+      });
       return;
     }
 
     setIsSubmitting(true);
+
     try {
-      // 👉 on appelle **notre** route API Next.js, pas Airtable directement
+      // Appel à l'API route Next.js
       const res = await fetch('/api/contact', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
           nom: formData.nom,
           email: formData.email,
@@ -49,15 +56,15 @@ export default function ContactForm() {
       });
 
       if (!res.ok) {
-        const err = await res.text();
-        throw new Error(err || 'Erreur API');
+        const errData = await res.json();
+        throw new Error(errData.error || 'Erreur lors de l\'envoi');
       }
 
       setFeedback({
-        message: "Merci ! Vos informations ont bien été envoyées. Nous revenons vers vous sous 1 heure.",
+        message: 'Merci ! Vos informations ont bien été envoyées. Nous revenons vers vous sous 1 heure.',
         type: 'success'
       });
-
+      
       setFormData({
         nom: '',
         telephone: '',
@@ -65,9 +72,12 @@ export default function ContactForm() {
         entreprise: '',
         website: ''
       });
-    } catch (error) {
-      console.error('Erreur envoi formulaire:', error);
-      setFeedback({ message: "Erreur lors de l'envoi. Veuillez réessayer.", type: 'error' });
+    } catch (err: any) {
+      console.error('Erreur formulaire:', err);
+      setFeedback({
+        message: err.message || 'Erreur lors de l\'envoi. Veuillez réessayer.',
+        type: 'error'
+      });
     } finally {
       setIsSubmitting(false);
     }
