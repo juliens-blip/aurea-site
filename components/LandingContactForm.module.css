@@ -1,0 +1,336 @@
+/* Container principal */
+.mainContainer {
+  background: linear-gradient(135deg, #0a192f 0%, #1a3a5f 100%);
+  padding: 80px 20px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  max-width: 1400px;
+  margin: 0 auto;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.mainContainer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+    radial-gradient(2px 2px at 40px 70px, #fafafa, transparent),
+    radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+    radial-gradient(1px 1px at 130px 80px, #ddd, transparent),
+    radial-gradient(2px 2px at 160px 30px, #eee, transparent),
+    radial-gradient(1px 1px at 210px 60px, #fff, transparent),
+    radial-gradient(2px 2px at 250px 90px, #fafafa, transparent),
+    radial-gradient(1px 1px at 290px 40px, #ddd, transparent);
+  background-repeat: repeat;
+  background-size: 800px 800px;
+  z-index: 0;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.mainContainer > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Colonnes */
+.leftColumn {
+  flex: 1;
+}
+
+.rightColumn {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 35px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+/* Companion (colonne gauche) */
+.contactCompanion {
+  background: linear-gradient(135deg, #0B1B2B 0%, #152238 50%, #0B1B2B 100%);
+  padding: 40px 35px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  height: 100%;
+}
+
+.contactCompanion::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(212, 175, 55, 0.06) 0%, transparent 50%);
+  pointer-events: none;
+  animation: shimmerBg 8s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes shimmerBg {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+
+.contactCompanion::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+  z-index: 1;
+}
+
+.companionContent {
+  position: relative;
+  z-index: 2;
+}
+
+.contactBadge {
+  display: inline-block;
+  padding: 6px 16px;
+  border: 2px solid #D4AF37;
+  color: #D4AF37;
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  font-weight: 400;
+  background: rgba(212, 175, 55, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+.companionTitle {
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: #FFFFFF;
+  margin-bottom: 15px;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+}
+
+.companionSubtitle {
+  font-size: 1rem;
+  color: #B8C5D6;
+  line-height: 1.7;
+  margin-bottom: 30px;
+  font-weight: 300;
+}
+
+.featuresList {
+  list-style: none;
+  margin-bottom: 25px;
+  padding: 0;
+}
+
+.featureItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+  font-size: 0.95rem;
+  color: #D1DCE8;
+  line-height: 1.6;
+}
+
+.featureItem::before {
+  content: '✓';
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, #D4AF37, #FFD700);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0B1B2B;
+  font-weight: 700;
+  font-size: 0.75rem;
+  margin-top: 2px;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+}
+
+.trustIndicator {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-left: 3px solid #D4AF37;
+  border-radius: 4px;
+  margin-top: 25px;
+}
+
+.trustIcon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.trustText {
+  font-size: 0.9rem;
+  color: #B8C5D6;
+  line-height: 1.5;
+}
+
+.trustHighlight {
+  color: #D4AF37;
+  font-weight: 500;
+}
+
+/* Formulaire (colonne droite) */
+.qTitle {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+  color: #1A1A1A;
+}
+
+.qSubtitle {
+  font-size: 0.95rem;
+  color: #4A4A4A;
+  margin-bottom: 25px;
+  font-weight: 300;
+}
+
+.questionnaireCard {
+  background: #FFFFFF;
+}
+
+.qGroup {
+  margin-bottom: 18px;
+}
+
+.qLabel {
+  font-size: 0.9rem;
+  color: #1A1A1A;
+  margin-bottom: 8px;
+  display: block;
+  font-weight: 500;
+}
+
+.qInput,
+.qTextarea {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 1px solid #E6E6E6;
+  background: #F8F9FA;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border 0.2s, background 0.2s, box-shadow 0.2s;
+  font-family: inherit;
+}
+
+.qTextarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.qInput:focus,
+.qTextarea:focus {
+  border-color: #D4AF37;
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
+}
+
+.qSubmit {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  margin-top: 10px;
+  background: linear-gradient(135deg, #D4AF37, #FFD700);
+  color: #1A1A1A;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.qSubmit:hover {
+  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+}
+
+.qSubmit:active {
+  transform: translateY(1px);
+}
+
+.qSubmit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.qFeedback {
+  font-size: 0.9rem;
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.qFeedback.success {
+  color: #0a7f2e;
+  background: rgba(10, 127, 46, 0.1);
+}
+
+.qFeedback.error {
+  color: #cc0000;
+  background: rgba(204, 0, 0, 0.1);
+}
+
+.qLegal {
+  color: #6B6B6B;
+  font-size: 0.75rem;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+  .mainContainer {
+    flex-direction: column;
+    padding: 60px 20px;
+  }
+
+  .rightColumn {
+    padding: 30px 25px;
+  }
+
+  .companionTitle {
+    font-size: 1.5rem;
+  }
+
+  .trustIndicator {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .mainContainer {
+    padding: 50px 15px;
+  }
+
+  .rightColumn {
+    padding: 25px 20px;
+  }
+
+  .contactBadge {
+    padding: 5px 14px;
+    font-size: 0.6rem;
+  }
+}
