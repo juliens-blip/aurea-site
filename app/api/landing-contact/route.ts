@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Utilisation des noms de champs au lieu des IDs
+    // Utilisation des noms de champs Airtable (pas les Field IDs)
     const payload = {
       records: [
         {
@@ -52,3 +52,24 @@ export async function POST(request: Request) {
         body: JSON.stringify(payload)
       }
     );
+
+    if (!airtableResponse.ok) {
+      const errorText = await airtableResponse.text();
+      console.error('Erreur Airtable:', errorText);
+      return NextResponse.json(
+        { error: 'Erreur lors de l\'envoi à Airtable' },
+        { status: 500 }
+      );
+    }
+
+    const data = await airtableResponse.json();
+    return NextResponse.json({ success: true, data }, { status: 200 });
+
+  } catch (error) {
+    console.error('Erreur API landing-contact:', error);
+    return NextResponse.json(
+      { error: 'Erreur serveur' },
+      { status: 500 }
+    );
+  }
+}
