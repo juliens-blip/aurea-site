@@ -25,12 +25,18 @@ export async function POST(request: Request) {
       );
     }
 
-    // IDs des champs Airtable pour la table des Leads
-    const fieldIds = {
-      nom: 'fldNjT0zdavq5n6z9',
-      email: 'fldZRQWAWDJdyCtCq',
-      telephone: 'fld9WqpwVwGkmmkEu',
-      entreprise: 'fldgApXL7u5xmTXFG'
+    // Utilisation des noms de champs au lieu des IDs
+    const payload = {
+      records: [
+        {
+          fields: {
+            "Nom": nom,
+            "Email": email,
+            "Téléphone": telephone,
+            "Nom Entreprise": entreprise
+          }
+        }
+      ]
     };
 
     // Appel à l'API Airtable
@@ -42,18 +48,7 @@ export async function POST(request: Request) {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          records: [
-            {
-              fields: {
-                [fieldIds.nom]: nom,
-                [fieldIds.email]: email,
-                [fieldIds.telephone]: telephone,
-                [fieldIds.entreprise]: entreprise
-              }
-            }
-          ]
-        })
+        body: JSON.stringify(payload)
       }
     );
 

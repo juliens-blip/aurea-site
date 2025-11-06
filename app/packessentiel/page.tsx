@@ -1,7 +1,7 @@
 'use client';
 
 import Navbar from '@/components/Navbar';
-import LandingContactForm from '@/components/LandingContactForm';
+import ContactForm from '@/components/ContactForm';
 import styles from './packessentiel.module.css';
 
 export default function PackEssentiel() {
@@ -70,7 +70,7 @@ export default function PackEssentiel() {
         </div>
       </div>
 
-      <LandingContactForm />
+      <ContactForm />
     </>
   );
 }
