@@ -3,10 +3,10 @@ import { NextResponse } from 'next/server';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { nom, email, telephone, entreprise } = body;
+    const { name, email, phone, company, message } = body;
 
     // Validation
-    if (!nom || !email || !telephone || !entreprise) {
+    if (!name || !email || !phone || !company || !message) {
       return NextResponse.json(
         { error: 'Tous les champs sont obligatoires' },
         { status: 400 }
@@ -15,7 +15,7 @@ export async function POST(request: Request) {
 
     // Variables d'environnement
     const baseId = process.env.AIRTABLE_BASE_ID;
-    const tableId = process.env.AIRTABLE_TABLE_ID;
+    const tableId = process.env.AIRTABLE_LANDING_TABLE_ID;
     const token = process.env.AIRTABLE_TOKEN;
 
     if (!baseId || !tableId || !token) {
@@ -25,12 +25,13 @@ export async function POST(request: Request) {
       );
     }
 
-    // IDs des champs Airtable pour la table des Leads
+    // IDs des champs Airtable pour la table Landing
     const fieldIds = {
-      nom: 'fldNjT0zdavq5n6z9',
-      email: 'fldZRQWAWDJdyCtCq',
-      telephone: 'fld9WqpwVwGkmmkEu',
-      entreprise: 'fldgApXL7u5xmTXFG'
+      name: 'fldbb6bEURzJYjoNw',
+      email: 'fldsibOAYG6Sbgv6X',
+      phone: 'fldL0l2RSaYMov2LM',
+      company: 'fldcmKUVT8wi9bc0O',
+      message: 'fldpE6VByWb5qya8G'
     };
 
     // Appel à l'API Airtable
@@ -46,10 +47,11 @@ export async function POST(request: Request) {
           records: [
             {
               fields: {
-                [fieldIds.nom]: nom,
+                [fieldIds.name]: name,
                 [fieldIds.email]: email,
-                [fieldIds.telephone]: telephone,
-                [fieldIds.entreprise]: entreprise
+                [fieldIds.phone]: phone,
+                [fieldIds.company]: company,
+                [fieldIds.message]: message
               }
             }
           ]
@@ -70,7 +72,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, data }, { status: 200 });
 
   } catch (error) {
-    console.error('Erreur API contact:', error);
+    console.error('Erreur API landing-contact:', error);
     return NextResponse.json(
       { error: 'Erreur serveur' },
       { status: 500 }
