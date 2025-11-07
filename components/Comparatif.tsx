@@ -176,7 +176,7 @@ export default function Comparatif() {
                   </td>
                   <td><a href="/packessentiel" className={styles.ctaBtn}>Voir Essentiel</a></td>
                   <td><a href="/packprestige" className={styles.ctaBtn}>Voir Prestige</a></td>
-                  <td><a href="/packprenium" className={styles.ctaBtn}>Voir Signature</a></td>
+                  <td><a href="/packpremium" className={styles.ctaBtn}>Voir Signature</a></td>
                 </tr>
               </tbody>
             </table>
@@ -186,7 +186,7 @@ export default function Comparatif() {
         <p className={styles.note}>
           Pack Essentiel : gestion simplifiée, contenu IA automatisé |
           Pack Prestige : identité visuelle complète, contenus sur-mesure |
-          Pack Signature : direction artistique continue, automatisation 24/7
+          Pack Prenium : direction artistique continue, automatisation 24/7
         </p>
       </div>
     </section>

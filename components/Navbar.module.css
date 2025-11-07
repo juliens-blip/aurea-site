@@ -22,7 +22,7 @@
 }
 
 .navbarContainer {
-  max-width: 1600px;
+  max-width: 1400px; /* Augmenté de 1600px à 1400px pour mieux centrer */
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -31,13 +31,13 @@
 }
 
 .navbarLogo {
-  height: 52px;
+  height: 60px; /* Augmenté de 52px à 60px */
   transition: all 0.3s ease;
   flex-shrink: 0;
 }
 
 .navbar.scrolled .navbarLogo {
-  height: 44px;
+  height: 50px; /* Augmenté de 44px à 50px */
 }
 
 .navbarLogo img {
@@ -49,7 +49,7 @@
 .navbarMenu {
   display: flex;
   align-items: center;
-  gap: 60px;
+  gap: 50px; /* Réduit de 60px à 50px pour mieux centrer */
   list-style: none;
   margin-left: auto;
 }
@@ -248,7 +248,7 @@
 /* Mobile Styles */
 @media (max-width: 1100px) {
   .navbarMenu {
-    gap: 45px;
+    gap: 40px; /* Réduit de 45px à 40px */
   }
 }
 
@@ -327,11 +327,11 @@
 
 @media (max-width: 640px) {
   .navbarLogo {
-    height: 42px;
+    height: 48px; /* Augmenté de 42px à 48px */
   }
 
   .navbar.scrolled .navbarLogo {
-    height: 38px;
+    height: 42px; /* Augmenté de 38px à 42px */
   }
 
   .navbarMenu {

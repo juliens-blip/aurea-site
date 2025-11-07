@@ -1,0 +1,391 @@
+/* HERO avec effet doré premium */
+.packHero {
+  position: relative;
+  width: 100vw;
+  height: min(100vh, 900px);
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+.packVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  z-index: 1;
+}
+
+.packOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(10, 10, 10, 0.35), rgba(10, 10, 10, 0.75));
+  z-index: 2;
+  pointer-events: none;
+}
+
+.packHero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(212, 175, 55, 0.06) 0%, transparent 50%);
+  z-index: 2;
+  pointer-events: none;
+  animation: shimmerParticles 8s ease-in-out infinite;
+}
+
+@keyframes shimmerParticles {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+.packContent {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 5vw;
+  gap: 1.5rem;
+}
+
+.packBadge {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  border: 2px solid #D4AF37;
+  color: #D4AF37;
+  font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 300;
+  animation: fadeInDown 1s ease-out;
+  background: rgba(212, 175, 55, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.packTitle {
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 200;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #ffffff 0%, #D4AF37 40%, #FFD700 60%, #D4AF37 80%, #ffffff 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  text-shadow: 0 0 40px rgba(212, 175, 55, 0.6);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  animation: shimmerSlide 4s ease-in-out infinite, fadeInUp 1.2s ease-out 0.3s both;
+  line-height: 1.2;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@keyframes shimmerSlide {
+  0%, 100% {
+    background-position: 0% 50%;
+    filter: brightness(1);
+  }
+  50% {
+    background-position: 100% 50%;
+    filter: brightness(1.4);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.packSubtitle {
+  font-size: clamp(1rem, 2.2vw, 1.6rem);
+  font-weight: 300;
+  color: #c0c0c0;
+  letter-spacing: 0.05em;
+  font-family: 'Georgia', serif;
+  max-width: 800px;
+  line-height: 1.6;
+  animation: fadeInUp 1.2s ease-out 0.6s both;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.packScroll {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #D4AF37;
+  font-size: 2rem;
+  z-index: 3;
+  animation: bounce 2s infinite;
+  user-select: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.packScrollText {
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  40% {
+    transform: translateX(-50%) translateY(-10px);
+  }
+  60% {
+    transform: translateX(-50%) translateY(-5px);
+  }
+}
+
+/* SECTIONS */
+.packSection {
+  padding: 100px 5vw;
+  background: #FFFFFF;
+  position: relative;
+}
+
+.packSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+}
+
+.packSectionAlt {
+  background: #F8F9FA;
+}
+
+.packContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.packContainerReverse {
+  direction: rtl;
+}
+
+.packContainerReverse > * {
+  direction: ltr;
+}
+
+.packTextContent {
+  padding: 0 20px;
+}
+
+.sectionBadge {
+  display: inline-block;
+  padding: 8px 20px;
+  border: 1px solid #D4AF37;
+  color: #D4AF37;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  font-weight: 400;
+  background: rgba(212, 175, 55, 0.08);
+}
+
+.packSectionTitle {
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 300;
+  color: #1A1A1A;
+  margin: 0 0 1.5rem 0;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+}
+
+.packSectionDescription {
+  font-size: clamp(1rem, 1.3vw, 1.15rem);
+  color: #4A4A4A;
+  line-height: 1.9;
+  margin: 0 0 2rem 0;
+  font-weight: 300;
+  font-family: 'Georgia', serif;
+}
+
+.packCta {
+  display: inline-block;
+  padding: 16px 40px;
+  background: linear-gradient(135deg, #D4AF37, #FFD700);
+  color: #1A1A1A;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 0;
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.packCta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.packCta:hover::before {
+  left: 100%;
+}
+
+.packCta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.6);
+}
+
+.packImageWrapper {
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+}
+
+.packImageWrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.packImageWrapper:hover::before {
+  opacity: 1;
+}
+
+.packImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.8s ease, filter 0.6s ease;
+  filter: brightness(0.95);
+}
+
+.packImage:hover {
+  transform: scale(1.05);
+  filter: brightness(1.05);
+}
+
+.packImageWrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+  transform: translateX(-100%);
+  transition: transform 0.8s ease;
+}
+
+.packImageWrapper:hover::after {
+  transform: translateX(100%);
+}
+
+/* RESPONSIVE */
+@media (max-width: 968px) {
+  .packHero {
+    height: min(75vh, 650px);
+  }
+
+  .packBadge {
+    padding: 0.6rem 1.5rem;
+  }
+
+  .packContent {
+    gap: 1rem;
+  }
+
+  .packSection {
+    padding: 70px 5vw;
+  }
+
+  .packContainer {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .packContainerReverse {
+    direction: ltr;
+  }
+
+  .packImageWrapper {
+    order: -1;
+    height: 320px;
+  }
+
+  .packTextContent {
+    padding: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .packSection {
+    padding: 60px 5vw;
+  }
+
+  .packImageWrapper {
+    height: 250px;
+  }
+
+  .packSectionDescription {
+    margin-bottom: 1.5rem;
+  }
+}

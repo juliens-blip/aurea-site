@@ -66,7 +66,7 @@ export default function Navbar() {
                 <a href="/packprestige" className={styles.navbarDropdownLink}>Pack Prestige</a>
               </li>
               <li className={styles.navbarDropdownItem}>
-                <a href="/packprenium" className={styles.navbarDropdownLink}>Pack Premium</a>
+                <a href="/packpremium" className={styles.navbarDropdownLink}>Pack Premium</a>
               </li>
             </ul>
           </li>

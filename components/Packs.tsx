@@ -117,7 +117,7 @@ export default function Packs() {
               <div className={styles.packFooter}>
                 <p className={styles.packIdeal}>💼 Idéal pour : Groupes hôteliers, brokers yacht, marques internationales</p>
                 <p className={styles.packPrice}>Sur devis personnalisé</p>
-                <a href="/packprenium" className={styles.packCta}>Demander un devis</a>
+                <a href="/packpremium" className={styles.packCta}>Demander un devis</a>
               </div>
             </div>
           </article>
