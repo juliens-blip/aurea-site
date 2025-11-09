@@ -1,6 +1,4 @@
-'use client';
-
-import Link from 'next/link';
+import BlogCard from '@/components/BlogCard';
 
 async function getArticles() {
   const baseId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_BASE_ID;
@@ -33,7 +31,7 @@ async function getArticles() {
       .map((record: any) => ({
         id: record.id,
         title: record.fields['Article Prompt'] || 'Sans titre',
-        slug: record.fields['SEO:Slug'], // ← CHANGE: SEO Slug → SEO:Slug
+        slug: record.fields['SEO:Slug'],
         image: record.fields['Article Image']?.[0]?.url || '',
         description: record.fields['Description'] || '',
         createdDate: record.fields['Creation Date'],
@@ -70,43 +68,14 @@ export default async function BlogPage() {
           gap: '30px',
         }}>
           {articles.map((article: any) => (
-            <Link href={`/blog/${article.slug}`} key={article.id}>
-              <div style={{
-                border: '1px solid #ddd',
-                borderRadius: '8px',
-                overflow: 'hidden',
-                cursor: 'pointer',
-                transition: 'transform 0.3s, box-shadow 0.3s',
-                backgroundColor: '#fff',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-5px)';
-                e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 0px 0px rgba(0,0,0,0)';
-              }}>
-                {article.image && (
-                  <img 
-                    src={article.image} 
-                    alt={article.title}
-                    style={{ width: '100%', height: '200px', objectFit: 'cover' }}
-                  />
-                )}
-                <div style={{ padding: '20px' }}>
-                  <h2 style={{ fontSize: '1.3rem', marginBottom: '10px', color: '#0B1B2B' }}>
-                    {article.title}
-                  </h2>
-                  <p style={{ color: '#666', marginBottom: '10px', minHeight: '40px' }}>
-                    {article.description}
-                  </p>
-                  <small style={{ color: '#999' }}>
-                    {article.createdDate}
-                  </small>
-                </div>
-              </div>
-            </Link>
+            <BlogCard
+              key={article.id}
+              title={article.title}
+              slug={article.slug}
+              image={article.image}
+              description={article.description}
+              createdDate={article.createdDate}
+            />
           ))}
         </div>
       )}
