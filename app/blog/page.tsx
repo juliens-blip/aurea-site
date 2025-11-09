@@ -1,10 +1,9 @@
 import Link from 'next/link';
 
 async function getArticles() {
-  const baseId = process.env.AIRTABLE_BLOG_BASE_ID;
-  const tableId = process.env.AIRTABLE_BLOG_TABLE_ID;
-  const token = process.env.AIRTABLE_TOKEN;
-
+const baseId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_BASE_ID;
+const tableId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_TABLE_ID;
+const token = process.env.NEXT_PUBLIC_AIRTABLE_TOKEN;
   if (!baseId || !tableId || !token) {
     console.error('Missing Airtable config');
     return [];
