@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import { cleanHtmlContent } from '../../lib/htmlParser';
 
 async function getArticleBySlug(slug: string) {
   const baseId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_BASE_ID;
@@ -22,16 +21,27 @@ async function getArticleBySlug(slug: string) {
     if (data.records.length === 0) return null;
 
     const fields = data.records[0].fields;
-    const htmlContent = fields['HTML Code'] || '';
+    let htmlContent = fields['HTML Code'] || '';
     
-    // NETTOYER LE HTML
-    const cleanedHtml = cleanHtmlContent(htmlContent);
+    // NETTOYER LE HTML DIRECTEMENT ICI
+    htmlContent = htmlContent
+      .replace(/<!DOCTYPE[^>]*>/gi, '')
+      .replace(/<html[^>]*>/gi, '')
+      .replace(/<\/html>/gi, '')
+      .replace(/<head[^>]*>[\s\S]*?<\/head>/gi, '')
+      .replace(/<body[^>]*>/gi, '')
+      .replace(/<\/body>/gi, '');
+
+    const containerMatch = htmlContent.match(/<div class="container">([\s\S]*)<\/div>/);
+    if (containerMatch) {
+      htmlContent = containerMatch[1];
+    }
 
     return {
       title: fields['Article Prompt'] || 'Sans titre',
       description: fields['Description'] || '',
       image: fields['Article Image']?.[0]?.url || '',
-      htmlContent: cleanedHtml,
+      htmlContent: htmlContent,
       slug: slug,
       date: fields['Creation Date'],
     };
@@ -80,7 +90,6 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
         />
       )}
 
-      {/* Afficher le HTML nettoyé */}
       <div
         dangerouslySetInnerHTML={{ __html: article.htmlContent }}
         style={{ fontSize: '1.1rem', lineHeight: '1.8' }}
