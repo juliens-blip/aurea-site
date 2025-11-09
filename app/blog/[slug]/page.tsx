@@ -9,7 +9,7 @@ async function getArticleBySlug(slug: string) {
 
   try {
     const response = await fetch(
-      `https://api.airtable.com/v0/${baseId}/${tableId}?filterByFormula={SEO Slug}="${slug}"`,
+      `https://api.airtable.com/v0/${baseId}/${tableId}?filterByFormula={SEO:Slug}="${slug}"`
       {
         headers: { Authorization: `Bearer ${token}` },
       }
