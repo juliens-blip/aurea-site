@@ -16,23 +16,14 @@ async function getArticleBySlug(slug: string) {
     );
 
     if (!response.ok) return null;
-
     const data = await response.json();
     if (data.records.length === 0) return null;
 
     const fields = data.records[0].fields;
     let htmlContent = fields['HTML Code'] || '';
     
-    // NETTOYER LE HTML DIRECTEMENT ICI
-    htmlContent = htmlContent
-      .replace(/<!DOCTYPE[^>]*>/gi, '')
-      .replace(/<html[^>]*>/gi, '')
-      .replace(/<\/html>/gi, '')
-      .replace(/<head[^>]*>[\s\S]*?<\/head>/gi, '')
-      .replace(/<body[^>]*>/gi, '')
-      .replace(/<\/body>/gi, '');
-
-    const containerMatch = htmlContent.match(/<div class="container">([\s\S]*)<\/div>/);
+    // EXTRAIRE JUSTE LE CONTENU DU CONTAINER (le plus important)
+    const containerMatch = htmlContent.match(/<div class="container">([\s\S]*?)<\/div>\s*<\/body>/);
     if (containerMatch) {
       htmlContent = containerMatch[1];
     }
@@ -74,30 +65,64 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   }
 
   return (
-    <article style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
-      <h1 style={{ fontSize: '2.5rem', marginBottom: '10px', color: '#0B1B2B' }}>
-        {article.title}
-      </h1>
-      <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '30px' }}>
-        {article.date}
-      </p>
+    <>
+      <style>{`
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .article-container {
+          max-width: 900px;
+          margin: 0 auto;
+          padding: 20px;
+        }
+        .article-container * {
+          max-width: 100%;
+        }
+      `}</style>
 
-      {article.image && (
-        <img
-          src={article.image}
-          alt={article.title}
-          style={{ width: '100%', height: 'auto', marginBottom: '40px', borderRadius: '8px' }}
+      <article className="article-container">
+        <div
+          dangerouslySetInnerHTML={{ __html: article.htmlContent }}
         />
-      )}
 
-      <div
-        dangerouslySetInnerHTML={{ __html: article.htmlContent }}
-        style={{ fontSize: '1.1rem', lineHeight: '1.8' }}
-      />
+        <hr style={{ margin: '60px 0', borderColor: '#ddd' }} />
 
-      <a href="/blog" style={{ display: 'inline-block', marginTop: '30px', color: '#C9B17E' }}>
-        ← Retour au blog
-      </a>
-    </article>
+        <div style={{ 
+          backgroundColor: '#F8F9FA',
+          padding: '30px',
+          borderRadius: '8px',
+          textAlign: 'center',
+          marginTop: '40px'
+        }}>
+          <h2 style={{ marginBottom: '15px', color: '#0B1B2B' }}>
+            Intéressé par nos solutions AURÉA?
+          </h2>
+          <p style={{ marginBottom: '20px', color: '#666' }}>
+            Découvrez comment automatiser votre marketing avec l'IA.
+          </p>
+          <a href="/packessentiel" style={{
+            display: 'inline-block',
+            padding: '12px 32px',
+            background: 'linear-gradient(135deg, #D4AF37, #FFD700)',
+            color: '#0B1B2B',
+            textDecoration: 'none',
+            borderRadius: '4px',
+            fontWeight: 'bold',
+            marginRight: '10px'
+          }}>
+            Pack Essentiel
+          </a>
+        </div>
+
+        <a href="/blog" style={{ 
+          display: 'inline-block',
+          marginTop: '30px',
+          color: '#C9B17E',
+          textDecoration: 'none',
+          fontWeight: 'bold'
+        }}>
+          ← Retour au blog
+        </a>
+      </article>
+    </>
   );
 }
