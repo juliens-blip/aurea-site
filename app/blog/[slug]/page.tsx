@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { cleanHtmlContent } from '@/lib/htmlParser';
+import { cleanHtmlContent } from '../../lib/htmlParser';
 
 async function getArticleBySlug(slug: string) {
   const baseId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_BASE_ID;
