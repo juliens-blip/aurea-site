@@ -17,12 +17,12 @@ export const metadata: Metadata = {
     "IA marketing"
   ],
 
-  metadataBase: new URL("https://aurea-communication.fr"),
+  metadataBase: new URL("https://aurea-site.vercel.app"),
   
   openGraph: {
     type: "website",
     locale: "fr_FR",
-    url: "https://aurea-communication.fr",
+    url: "https://aurea-site.vercel.app",
     siteName: "AURÉA Communication",
     title: "AURÉA Communication - Agence Digitale AI Premium",
     description: "Transformation digitale et automatisation IA pour marques de luxe",
@@ -64,7 +64,7 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "AURÉA Communication",
-    "url": "https://aurea-communication.fr",
+    "url": "https://aurea-site.vercel.app",
     "logo": "https://www.dropbox.com/scl/fi/ele5d4wemwffg6pnfuul9/unnamed-9.jpg?dl=1",
     "description": "Agence digitale spécialisée en IA et automatisation pour marques de luxe",
     "contactPoint": {
@@ -101,7 +101,7 @@ export default function RootLayout({
         />
 
         {/* Canonical */}
-        <link rel="canonical" href="https://aurea-communication.fr" />
+        <link rel="canonical" href="https://aurea-site.vercel.app" />
       </head>
       <body className={inter.className}>{children}</body>
     </html>
