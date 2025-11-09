@@ -1,22 +1,18 @@
 import { Metadata } from 'next';
+import { cleanHtmlContent } from '@/lib/htmlParser';
 
 async function getArticleBySlug(slug: string) {
-  const baseId = process.env.AIRTABLE_BLOG_BASE_ID;
-  const tableId = process.env.AIRTABLE_BLOG_TABLE_ID;
-  const token = process.env.AIRTABLE_TOKEN;
+  const baseId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_BASE_ID;
+  const tableId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_TABLE_ID;
+  const token = process.env.NEXT_PUBLIC_AIRTABLE_TOKEN;
 
-  if (!baseId || !tableId || !token) {
-    console.error('Missing Airtable config');
-    return null;
-  }
+  if (!baseId || !tableId || !token) return null;
 
   try {
     const response = await fetch(
       `https://api.airtable.com/v0/${baseId}/${tableId}?filterByFormula={SEO Slug}="${slug}"`,
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       }
     );
 
@@ -26,35 +22,32 @@ async function getArticleBySlug(slug: string) {
     if (data.records.length === 0) return null;
 
     const fields = data.records[0].fields;
+    const htmlContent = fields['HTML Code'] || '';
+    
+    // NETTOYER LE HTML
+    const cleanedHtml = cleanHtmlContent(htmlContent);
+
     return {
       title: fields['Article Prompt'] || 'Sans titre',
       description: fields['Description'] || '',
       image: fields['Article Image']?.[0]?.url || '',
-      htmlContent: fields['HTML Code'] || '<p>Contenu en attente...</p>',
+      htmlContent: cleanedHtml,
       slug: slug,
       date: fields['Creation Date'],
     };
   } catch (error) {
-    console.error('Error fetching article:', error);
+    console.error('Error:', error);
     return null;
   }
 }
 
 export async function generateMetadata({ params }: any): Promise<Metadata> {
   const article = await getArticleBySlug(params.slug);
-
-  if (!article) {
-    return { title: 'Article non trouvé' };
-  }
+  if (!article) return { title: 'Article non trouvé' };
 
   return {
     title: `${article.title} | Blog AURÉA`,
     description: article.description,
-    openGraph: {
-      title: article.title,
-      description: article.description,
-      images: article.image ? [article.image] : [],
-    },
   };
 }
 
@@ -65,22 +58,19 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     return (
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 20px' }}>
         <h1>Article non trouvé</h1>
-        <p>Cet article n'existe pas ou a été supprimé.</p>
         <a href="/blog">← Retour au blog</a>
       </div>
     );
   }
 
   return (
-    <article style={{ maxWidth: '800px', margin: '0 auto', padding: '40px 20px' }}>
-      <div style={{ marginBottom: '30px' }}>
-        <h1 style={{ fontSize: '2.5rem', marginBottom: '10px', color: '#0B1B2B' }}>
-          {article.title}
-        </h1>
-        <p style={{ color: '#666', fontSize: '0.9rem' }}>
-          Publié le: {article.date}
-        </p>
-      </div>
+    <article style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
+      <h1 style={{ fontSize: '2.5rem', marginBottom: '10px', color: '#0B1B2B' }}>
+        {article.title}
+      </h1>
+      <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '30px' }}>
+        {article.date}
+      </p>
 
       {article.image && (
         <img
@@ -90,63 +80,13 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
         />
       )}
 
-      {/* Affiche le HTML généré par Gemini */}
+      {/* Afficher le HTML nettoyé */}
       <div
         dangerouslySetInnerHTML={{ __html: article.htmlContent }}
-        style={{
-          fontSize: '1.1rem',
-          lineHeight: '1.8',
-          color: '#333',
-        }}
+        style={{ fontSize: '1.1rem', lineHeight: '1.8' }}
       />
 
-      <hr style={{ margin: '60px 0', borderColor: '#ddd' }} />
-
-      <div style={{ 
-        backgroundColor: '#F8F9FA',
-        padding: '30px',
-        borderRadius: '8px',
-        textAlign: 'center',
-        marginTop: '40px'
-      }}>
-        <h2 style={{ marginBottom: '15px', color: '#0B1B2B' }}>
-          Intéressé par nos solutions?
-        </h2>
-        <p style={{ marginBottom: '20px', color: '#666' }}>
-          Découvrez comment AURÉA peut transformer votre présence digitale avec l'IA et l'automatisation.
-        </p>
-        <a href="/packessentiel" style={{
-          display: 'inline-block',
-          padding: '12px 32px',
-          background: 'linear-gradient(135deg, #D4AF37, #FFD700)',
-          color: '#0B1B2B',
-          textDecoration: 'none',
-          borderRadius: '4px',
-          fontWeight: 'bold',
-          marginRight: '10px'
-        }}>
-          Pack Essentiel
-        </a>
-        <a href="/packprestige" style={{
-          display: 'inline-block',
-          padding: '12px 32px',
-          background: 'linear-gradient(135deg, #D4AF37, #FFD700)',
-          color: '#0B1B2B',
-          textDecoration: 'none',
-          borderRadius: '4px',
-          fontWeight: 'bold',
-        }}>
-          Pack Prestige
-        </a>
-      </div>
-
-      <a href="/blog" style={{ 
-        display: 'inline-block',
-        marginTop: '30px',
-        color: '#C9B17E',
-        textDecoration: 'none',
-        fontWeight: 'bold'
-      }}>
+      <a href="/blog" style={{ display: 'inline-block', marginTop: '30px', color: '#C9B17E' }}>
         ← Retour au blog
       </a>
     </article>
