@@ -84,6 +84,17 @@ export default function Navbar() {
             </a>
           </li>
 
+          {/* ← NOUVEAU LIEN ACTUALITÉS */}
+          <li className={styles.navbarItem}>
+            <a 
+              href="/blog" 
+              className={styles.navbarLink}
+            >
+              Actualités
+            </a>
+          </li>
+          {/* ← */}
+
           <li className={styles.navbarItem}>
             <a 
               href="#contact" 
