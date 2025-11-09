@@ -27,7 +27,7 @@ async function getArticles() {
 
     const data = await response.json();
     return data.records
-      .filter((record: any) => record.fields['SEO Slug']) // Filtre les vides
+      .filter((record: any) => record.fields['SEO:Slug']) // Filtre les vides
       .map((record: any) => ({
         id: record.id,
         title: record.fields['Article Prompt'] || 'Sans titre',
