@@ -1,9 +1,12 @@
+'use client';
+
 import Link from 'next/link';
 
 async function getArticles() {
-const baseId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_BASE_ID;
-const tableId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_TABLE_ID;
-const token = process.env.NEXT_PUBLIC_AIRTABLE_TOKEN;
+  const baseId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_BASE_ID;
+  const tableId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_TABLE_ID;
+  const token = process.env.NEXT_PUBLIC_AIRTABLE_TOKEN;
+
   if (!baseId || !tableId || !token) {
     console.error('Missing Airtable config');
     return [];
@@ -26,11 +29,11 @@ const token = process.env.NEXT_PUBLIC_AIRTABLE_TOKEN;
 
     const data = await response.json();
     return data.records
-      .filter((record: any) => record.fields['SEO:Slug']) // Filtre les vides
+      .filter((record: any) => record.fields['SEO:Slug'])
       .map((record: any) => ({
         id: record.id,
         title: record.fields['Article Prompt'] || 'Sans titre',
-        slug: record.fields['SEO Slug'],
+        slug: record.fields['SEO:Slug'], // ← CHANGE: SEO Slug → SEO:Slug
         image: record.fields['Article Image']?.[0]?.url || '',
         description: record.fields['Description'] || '',
         createdDate: record.fields['Creation Date'],
