@@ -9,7 +9,7 @@ async function getArticleBySlug(slug: string) {
 
   try {
     const response = await fetch(
-      `https://api.airtable.com/v0/${baseId}/${tableId}?filterByFormula={SEO:Slug}="${slug}"`
+      `https://api.airtable.com/v0/${baseId}/${tableId}?filterByFormula={SEO:Slug}="${slug}"`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -22,7 +22,6 @@ async function getArticleBySlug(slug: string) {
     const fields = data.records[0].fields;
     let htmlContent = fields['HTML Code'] || '';
     
-    // EXTRAIRE JUSTE LE CONTENU DU CONTAINER (le plus important)
     const containerMatch = htmlContent.match(/<div class="container">([\s\S]*?)<\/div>\s*<\/body>/);
     if (containerMatch) {
       htmlContent = containerMatch[1];
@@ -65,64 +64,16 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   }
 
   return (
-    <>
-      <style>{`
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .article-container {
-          max-width: 900px;
-          margin: 0 auto;
-          padding: 20px;
-        }
-        .article-container * {
-          max-width: 100%;
-        }
-      `}</style>
+    <article style={{ maxWidth: '900px', margin: '0 auto', padding: '20px' }}>
+      <div
+        dangerouslySetInnerHTML={{ __html: article.htmlContent }}
+      />
 
-      <article className="article-container">
-        <div
-          dangerouslySetInnerHTML={{ __html: article.htmlContent }}
-        />
+      <hr style={{ margin: '60px 0', borderColor: '#ddd' }} />
 
-        <hr style={{ margin: '60px 0', borderColor: '#ddd' }} />
-
-        <div style={{ 
-          backgroundColor: '#F8F9FA',
-          padding: '30px',
-          borderRadius: '8px',
-          textAlign: 'center',
-          marginTop: '40px'
-        }}>
-          <h2 style={{ marginBottom: '15px', color: '#0B1B2B' }}>
-            Intéressé par nos solutions AURÉA?
-          </h2>
-          <p style={{ marginBottom: '20px', color: '#666' }}>
-            Découvrez comment automatiser votre marketing avec l'IA.
-          </p>
-          <a href="/packessentiel" style={{
-            display: 'inline-block',
-            padding: '12px 32px',
-            background: 'linear-gradient(135deg, #D4AF37, #FFD700)',
-            color: '#0B1B2B',
-            textDecoration: 'none',
-            borderRadius: '4px',
-            fontWeight: 'bold',
-            marginRight: '10px'
-          }}>
-            Pack Essentiel
-          </a>
-        </div>
-
-        <a href="/blog" style={{ 
-          display: 'inline-block',
-          marginTop: '30px',
-          color: '#C9B17E',
-          textDecoration: 'none',
-          fontWeight: 'bold'
-        }}>
-          ← Retour au blog
-        </a>
-      </article>
-    </>
+      <div style={{ textAlign: 'center', marginTop: '40px' }}>
+        <a href="/blog">← Retour au blog</a>
+      </div>
+    </article>
   );
 }
