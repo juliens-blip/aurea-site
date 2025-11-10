@@ -35,9 +35,16 @@ async function getArticleBySlug(slug: string) {
     const fields = record.fields;
     let htmlContent = fields['HTML Code'] || '';
     
-    const containerMatch = htmlContent.match(/<div class="container">([\s\S]*?)<\/div>\s*<\/body>/);
+    // Essayer d'extraire le container
+    const containerMatch = htmlContent.match(/<div class="container">([\s\S]*?)<\/div>/);
     if (containerMatch) {
       htmlContent = containerMatch[1];
+    } else {
+      // Si pas de container, extraire le body
+      const bodyMatch = htmlContent.match(/<body[^>]*>([\s\S]*?)<\/body>/);
+      if (bodyMatch) {
+        htmlContent = bodyMatch[1];
+      }
     }
 
     return {
