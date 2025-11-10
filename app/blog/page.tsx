@@ -26,21 +26,21 @@ async function getArticles() {
     }
 
     const data = await response.json();
-    console.log('Raw records:', data.records[0]?.fields); // Debug
     
     return data.records
-      .filter((record: any) => record.fields['SEO:Slug'])
+      .filter((record: any) => record.fields['Article Prompt'])
       .map((record: any) => {
-        const slugRaw = record.fields['SEO:Slug'];
-        // SEO:Slug est un array (lookup field) - prendre le premier élément
-        const slug = Array.isArray(slugRaw) ? slugRaw[0] : String(slugRaw || '').trim();
-        
-        console.log('Mapped slug:', slug, typeof slug); // Debug
+        // Générer le slug automatiquement à partir du titre
+        const slug = String(record.fields['Article Prompt'] || '')
+          .toLowerCase()
+          .trim()
+          .replace(/\s+/g, '-')
+          .replace(/[^a-z0-9-]/g, '');
         
         return {
           id: record.id,
           title: record.fields['Article Prompt'] || 'Sans titre',
-          slug: String(slug).trim(), // Force string final
+          slug: slug,
           image: record.fields['Article Image']?.[0]?.url || '',
           description: record.fields['Description'] || '',
           createdDate: record.fields['Creation Date'],
