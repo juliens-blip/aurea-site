@@ -25,7 +25,7 @@ async function getArticles() {
     const data = await response.json();
     
     return data.records
-      .filter((record: any) => record.fields['Published'])
+      .filter((record: any) => record.fields['publié ?'])
       .map((record: any) => ({
         id: record.id,
         title: record.fields['Article Title'] || 'Sans titre',
