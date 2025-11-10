@@ -5,14 +5,10 @@ function normalizeSlug(text: string): string {
   return text
     .toLowerCase()
     .trim()
-    // Remplace les accents
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
-    // Remplace les caractères spéciaux par des tirets
     .replace(/[^\w\s-]/g, '')
-    // Remplace les espaces multiples par des tirets
     .replace(/[\s_-]+/g, '-')
-    // Enlève les tirets au début/fin
     .replace(/^-+|-+$/g, '');
 }
 
@@ -21,7 +17,10 @@ async function getArticleBySlug(slug: string) {
   const tableId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_TABLE_ID;
   const token = process.env.NEXT_PUBLIC_AIRTABLE_TOKEN;
 
-  if (!baseId || !tableId || !token) return null;
+  if (!baseId || !tableId || !token) {
+    console.error('Missing Airtable config');
+    return null;
+  }
 
   try {
     const response = await fetch(
@@ -31,31 +30,45 @@ async function getArticleBySlug(slug: string) {
       }
     );
 
-    if (!response.ok) return null;
+    if (!response.ok) {
+      console.error('Airtable error:', response.status);
+      return null;
+    }
     
     const data = await response.json();
+    
+    console.log('Searching for slug:', slug);
     
     const record = data.records.find((r: any) => {
       const title = r.fields['Article Prompt'] || '';
       const normalizedSlug = normalizeSlug(title);
-      console.log('Cherchant:', slug, '| Trouvé:', normalizedSlug);
+      console.log('Comparing:', slug, '===', normalizedSlug, '?', slug === normalizedSlug);
       return normalizedSlug === slug;
     });
 
     if (!record) {
-      console.error('Aucun article trouvé avec le slug:', slug);
+      console.error('No article found with slug:', slug);
       return null;
     }
+
+    console.log('Article found:', record.fields['Article Prompt']);
 
     const fields = record.fields;
     const contentRaw = fields['Article Content'] || '{}';
     
     let content;
     try {
-      content = typeof contentRaw === 'string' ? JSON.parse(contentRaw) : contentRaw;
+      if (typeof contentRaw === 'string') {
+        const cleaned = contentRaw.trim();
+        content = JSON.parse(cleaned);
+      } else {
+        content = contentRaw;
+      }
     } catch (e) {
       console.error('JSON parse error:', e);
-      return null;
+      console.log('Raw content:', contentRaw);
+      // Si le JSON parse échoue, retourne une structure vide au lieu de null
+      content = { sections: [] };
     }
 
     return {
@@ -67,7 +80,7 @@ async function getArticleBySlug(slug: string) {
       date: fields['Creation Date'],
     };
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error fetching article:', error);
     return null;
   }
 }
