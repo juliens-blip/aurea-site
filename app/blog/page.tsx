@@ -26,18 +26,25 @@ async function getArticles() {
     }
 
     const data = await response.json();
+    console.log('Raw records:', data.records[0]?.fields); // Debug
+    
     return data.records
       .filter((record: any) => record.fields['SEO:Slug'])
-      .map((record: any) => ({
-        id: record.id,
-        title: record.fields['Article Prompt'] || 'Sans titre',
-        slug: Array.isArray(record.fields['SEO:Slug']) 
-  ? record.fields['SEO:Slug'][0] 
-  : record.fields['SEO:Slug'],
-        image: record.fields['Article Image']?.[0]?.url || '',
-        description: record.fields['Description'] || '',
-        createdDate: record.fields['Creation Date'],
-      }));
+      .map((record: any) => {
+        const slugRaw = record.fields['SEO:Slug'];
+        const slug = Array.isArray(slugRaw) ? slugRaw[0] : String(slugRaw || '').trim();
+        
+        console.log('Mapped slug:', slug, typeof slug); // Debug
+        
+        return {
+          id: record.id,
+          title: record.fields['Article Prompt'] || 'Sans titre',
+          slug: slug, // Force string
+          image: record.fields['Article Image']?.[0]?.url || '',
+          description: record.fields['Description'] || '',
+          createdDate: record.fields['Creation Date'],
+        };
+      });
   } catch (error) {
     console.error('Error fetching articles:', error);
     return [];
