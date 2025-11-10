@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 interface BlogCardProps {
   title: string;
   slug: string;
@@ -10,7 +12,7 @@ interface BlogCardProps {
 
 export default function BlogCard({ title, slug, image, description, createdDate }: BlogCardProps) {
   return (
-    <a href={`/blog/${slug}`} style={{ textDecoration: 'none' }}>
+    <Link href={`/blog/${slug}`}>
       <div style={{
         border: '1px solid #ddd',
         borderRadius: '8px',
@@ -46,6 +48,6 @@ export default function BlogCard({ title, slug, image, description, createdDate 
           </small>
         </div>
       </div>
-    </a>
+    </Link>
   );
 }
