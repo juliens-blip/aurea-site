@@ -32,6 +32,7 @@ async function getArticles() {
       .filter((record: any) => record.fields['SEO:Slug'])
       .map((record: any) => {
         const slugRaw = record.fields['SEO:Slug'];
+        // SEO:Slug est un array (lookup field) - prendre le premier élément
         const slug = Array.isArray(slugRaw) ? slugRaw[0] : String(slugRaw || '').trim();
         
         console.log('Mapped slug:', slug, typeof slug); // Debug
@@ -39,7 +40,7 @@ async function getArticles() {
         return {
           id: record.id,
           title: record.fields['Article Prompt'] || 'Sans titre',
-          slug: slug, // Force string
+          slug: String(slug).trim(), // Force string final
           image: record.fields['Article Image']?.[0]?.url || '',
           description: record.fields['Description'] || '',
           createdDate: record.fields['Creation Date'],
