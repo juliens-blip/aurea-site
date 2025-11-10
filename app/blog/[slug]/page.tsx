@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import ArticleRenderer from '@/components/ArticleRenderer';
 
 async function getArticleBySlug(slug: string) {
   const baseId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_BASE_ID;
@@ -32,26 +33,21 @@ async function getArticleBySlug(slug: string) {
     if (!record) return null;
 
     const fields = record.fields;
-    let htmlContent = fields['HTML Code'] || '';
+    const contentRaw = fields['Article Content'] || '{}';
     
-    // Supprimer DOCTYPE et balises html/head inutiles
-    htmlContent = htmlContent
-      .replace(/<!DOCTYPE[^>]*>/gi, '')
-      .replace(/<html[^>]*>/gi, '')
-      .replace(/<\/html>/gi, '')
-      .replace(/<head[^>]*>[\s\S]*?<\/head>/gi, '');
-    
-    // Extraire le contenu du body
-    const bodyMatch = htmlContent.match(/<body[^>]*>([\s\S]*)<\/body>/i);
-    if (bodyMatch) {
-      htmlContent = bodyMatch[1];
+    let content;
+    try {
+      content = typeof contentRaw === 'string' ? JSON.parse(contentRaw) : contentRaw;
+    } catch (e) {
+      console.error('JSON parse error:', e);
+      return null;
     }
 
     return {
       title: fields['Article Prompt'] || 'Sans titre',
       description: fields['Description'] || '',
       image: fields['Article Image']?.[0]?.url || '',
-      htmlContent: htmlContent,
+      content: content,
       slug: slug,
       date: fields['Creation Date'],
     };
@@ -83,17 +79,5 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     );
   }
 
-  return (
-    <article style={{ maxWidth: '900px', margin: '0 auto', padding: '20px' }}>
-      <div
-        dangerouslySetInnerHTML={{ __html: article.htmlContent }}
-      />
-
-      <hr style={{ margin: '60px 0', borderColor: '#ddd' }} />
-
-      <div style={{ textAlign: 'center', marginTop: '40px' }}>
-        <a href="/blog">← Retour au blog</a>
-      </div>
-    </article>
-  );
+  return <ArticleRenderer content={article.content} />;
 }
