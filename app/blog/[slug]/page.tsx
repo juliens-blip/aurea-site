@@ -1,6 +1,9 @@
 import { Metadata } from 'next';
 
-async function getArticleBySlug(slug: string) {
+async function getArticleBySlug(slug: any) {
+  // Force slug en string
+  const slugString = Array.isArray(slug) ? slug[0] : String(slug || '').trim();
+  
   const baseId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_BASE_ID;
   const tableId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_TABLE_ID;
   const token = process.env.NEXT_PUBLIC_AIRTABLE_TOKEN;
@@ -9,7 +12,7 @@ async function getArticleBySlug(slug: string) {
 
   try {
     const response = await fetch(
-      `https://api.airtable.com/v0/${baseId}/${tableId}?filterByFormula={SEO:Slug}="${slug}"`,
+      `https://api.airtable.com/v0/${baseId}/${tableId}?filterByFormula={SEO:Slug}="${slugString}"`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -32,7 +35,7 @@ async function getArticleBySlug(slug: string) {
       description: fields['Description'] || '',
       image: fields['Article Image']?.[0]?.url || '',
       htmlContent: htmlContent,
-      slug: slug,
+      slug: slugString,
       date: fields['Creation Date'],
     };
   } catch (error) {
