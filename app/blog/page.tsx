@@ -31,7 +31,9 @@ async function getArticles() {
       .map((record: any) => ({
         id: record.id,
         title: record.fields['Article Prompt'] || 'Sans titre',
-        slug: record.fields['SEO:Slug'],
+        slug: Array.isArray(record.fields['SEO:Slug']) 
+  ? record.fields['SEO:Slug'][0] 
+  : record.fields['SEO:Slug'],
         image: record.fields['Article Image']?.[0]?.url || '',
         description: record.fields['Description'] || '',
         createdDate: record.fields['Creation Date'],
