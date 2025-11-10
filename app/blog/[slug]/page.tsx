@@ -1,6 +1,21 @@
 import { Metadata } from 'next';
 import ArticleRenderer from '@/components/ArticleRenderer';
 
+function normalizeSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    // Remplace les accents
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    // Remplace les caractères spéciaux par des tirets
+    .replace(/[^\w\s-]/g, '')
+    // Remplace les espaces multiples par des tirets
+    .replace(/[\s_-]+/g, '-')
+    // Enlève les tirets au début/fin
+    .replace(/^-+|-+$/g, '');
+}
+
 async function getArticleBySlug(slug: string) {
   const baseId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_BASE_ID;
   const tableId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_TABLE_ID;
@@ -22,15 +37,15 @@ async function getArticleBySlug(slug: string) {
     
     const record = data.records.find((r: any) => {
       const title = r.fields['Article Prompt'] || '';
-      const generatedSlug = title
-        .toLowerCase()
-        .trim()
-        .replace(/\s+/g, '-')
-        .replace(/[^a-z0-9-]/g, '');
-      return generatedSlug === slug;
+      const normalizedSlug = normalizeSlug(title);
+      console.log('Cherchant:', slug, '| Trouvé:', normalizedSlug);
+      return normalizedSlug === slug;
     });
 
-    if (!record) return null;
+    if (!record) {
+      console.error('Aucun article trouvé avec le slug:', slug);
+      return null;
+    }
 
     const fields = record.fields;
     const contentRaw = fields['Article Content'] || '{}';

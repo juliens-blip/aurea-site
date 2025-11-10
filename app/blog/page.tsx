@@ -1,5 +1,16 @@
 import BlogCard from '@/components/BlogCard';
 
+function normalizeSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 async function getArticles() {
   const baseId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_BASE_ID;
   const tableId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_TABLE_ID;
@@ -30,12 +41,7 @@ async function getArticles() {
     return data.records
       .filter((record: any) => record.fields['Article Prompt'])
       .map((record: any) => {
-        // Générer le slug automatiquement à partir du titre
-        const slug = String(record.fields['Article Prompt'] || '')
-          .toLowerCase()
-          .trim()
-          .replace(/\s+/g, '-')
-          .replace(/[^a-z0-9-]/g, '');
+        const slug = normalizeSlug(record.fields['Article Prompt'] || '');
         
         return {
           id: record.id,
