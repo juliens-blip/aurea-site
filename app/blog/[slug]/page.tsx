@@ -19,7 +19,6 @@ async function getArticleBySlug(slug: string) {
     
     const data = await response.json();
     
-    // Chercher l'article qui correspond au slug généré
     const record = data.records.find((r: any) => {
       const title = r.fields['Article Prompt'] || '';
       const generatedSlug = title
@@ -35,16 +34,17 @@ async function getArticleBySlug(slug: string) {
     const fields = record.fields;
     let htmlContent = fields['HTML Code'] || '';
     
-    // Essayer d'extraire le container
-    const containerMatch = htmlContent.match(/<div class="container">([\s\S]*?)<\/div>/);
-    if (containerMatch) {
-      htmlContent = containerMatch[1];
-    } else {
-      // Si pas de container, extraire le body
-      const bodyMatch = htmlContent.match(/<body[^>]*>([\s\S]*?)<\/body>/);
-      if (bodyMatch) {
-        htmlContent = bodyMatch[1];
-      }
+    // Supprimer DOCTYPE et balises html/head inutiles
+    htmlContent = htmlContent
+      .replace(/<!DOCTYPE[^>]*>/gi, '')
+      .replace(/<html[^>]*>/gi, '')
+      .replace(/<\/html>/gi, '')
+      .replace(/<head[^>]*>[\s\S]*?<\/head>/gi, '');
+    
+    // Extraire le contenu du body
+    const bodyMatch = htmlContent.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+    if (bodyMatch) {
+      htmlContent = bodyMatch[1];
     }
 
     return {
