@@ -1,9 +1,6 @@
 import { Metadata } from 'next';
 
-async function getArticleBySlug(slug: any) {
-  // Force slug en string
-  const slugString = Array.isArray(slug) ? slug[0] : String(slug || '').trim();
-  
+async function getArticleBySlug(slug: string) {
   const baseId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_BASE_ID;
   const tableId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_TABLE_ID;
   const token = process.env.NEXT_PUBLIC_AIRTABLE_TOKEN;
@@ -12,17 +9,30 @@ async function getArticleBySlug(slug: any) {
 
   try {
     const response = await fetch(
-      `https://api.airtable.com/v0/${baseId}/${tableId}?filterByFormula={SEO:Slug}="${slugString}"`,
+      `https://api.airtable.com/v0/${baseId}/${tableId}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
 
     if (!response.ok) return null;
+    
     const data = await response.json();
-    if (data.records.length === 0) return null;
+    
+    // Chercher l'article qui correspond au slug généré
+    const record = data.records.find((r: any) => {
+      const title = r.fields['Article Prompt'] || '';
+      const generatedSlug = title
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-]/g, '');
+      return generatedSlug === slug;
+    });
 
-    const fields = data.records[0].fields;
+    if (!record) return null;
+
+    const fields = record.fields;
     let htmlContent = fields['HTML Code'] || '';
     
     const containerMatch = htmlContent.match(/<div class="container">([\s\S]*?)<\/div>\s*<\/body>/);
@@ -35,7 +45,7 @@ async function getArticleBySlug(slug: any) {
       description: fields['Description'] || '',
       image: fields['Article Image']?.[0]?.url || '',
       htmlContent: htmlContent,
-      slug: slugString,
+      slug: slug,
       date: fields['Creation Date'],
     };
   } catch (error) {
