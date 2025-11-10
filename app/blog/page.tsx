@@ -1,16 +1,5 @@
 import BlogCard from '@/components/BlogCard';
 
-function normalizeSlug(text: string): string {
-  return text
-    .toLowerCase()
-    .trim()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^\w\s-]/g, '')
-    .replace(/[\s_-]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
-
 async function getArticles() {
   const baseId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_BASE_ID;
   const tableId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_TABLE_ID;
@@ -31,27 +20,20 @@ async function getArticles() {
       }
     );
 
-    if (!response.ok) {
-      console.error('Airtable error:', response.status);
-      return [];
-    }
+    if (!response.ok) return [];
 
     const data = await response.json();
     
     return data.records
-      .filter((record: any) => record.fields['Article Prompt'])
-      .map((record: any) => {
-        const slug = normalizeSlug(record.fields['Article Prompt'] || '');
-        
-        return {
-          id: record.id,
-          title: record.fields['Article Prompt'] || 'Sans titre',
-          slug: slug,
-          image: record.fields['Article Image']?.[0]?.url || '',
-          description: record.fields['Description'] || '',
-          createdDate: record.fields['Creation Date'],
-        };
-      });
+      .filter((record: any) => record.fields['Published'])
+      .map((record: any) => ({
+        id: record.id,
+        title: record.fields['Article Title'] || 'Sans titre',
+        slug: record.fields['Article Slug'] || '',
+        image: record.fields['Article Image']?.[0]?.url || '',
+        description: record.fields['Article Description'] || '',
+        createdDate: record.fields['Creation Date'],
+      }));
   } catch (error) {
     console.error('Error fetching articles:', error);
     return [];
