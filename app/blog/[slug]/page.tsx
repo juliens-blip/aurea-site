@@ -20,12 +20,30 @@ async function getArticleBySlug(slug: string) {
     
     const data = await response.json();
     
+    console.log('=== DEBUG ===');
+    console.log('Slug cherché:', slug);
+    console.log('Articles trouvés:', data.records.length);
+    
+    data.records.forEach((r: any, i: number) => {
+      const articleSlug = r.fields['fldYJ4kaK7s9ucdX9'] || '';
+      console.log(`Article ${i}:`, {
+        title: r.fields['fld3c9vJy2oIvdIqy'],
+        slug: articleSlug,
+        match: articleSlug === slug
+      });
+    });
+    
     const record = data.records.find((r: any) => {
       const articleSlug = r.fields['fldYJ4kaK7s9ucdX9'] || '';
       return articleSlug === slug;
     });
 
-    if (!record) return null;
+    if (!record) {
+      console.log('❌ Article NOT FOUND');
+      return null;
+    }
+
+    console.log('✅ Article FOUND');
 
     const fields = record.fields;
     const contentRaw = fields['fld8w7490FqthaqyS'] || '{}';
@@ -46,6 +64,7 @@ async function getArticleBySlug(slug: string) {
       date: fields['fld1HKdhhUO1dUiwJ'],
     };
   } catch (error) {
+    console.error('Error:', error);
     return null;
   }
 }
