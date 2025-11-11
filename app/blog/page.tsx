@@ -5,18 +5,13 @@ async function getArticles() {
   const tableId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_TABLE_ID;
   const token = process.env.NEXT_PUBLIC_AIRTABLE_TOKEN;
 
-  if (!baseId || !tableId || !token) {
-    console.error('Missing Airtable config');
-    return [];
-  }
+  if (!baseId || !tableId || !token) return [];
 
   try {
     const response = await fetch(
-      `https://api.airtable.com/v0/${baseId}/${tableId}`,
+      `https://api.airtable.com/v0/${baseId}/${tableId}?filterByFormula={fldQmFBZzcMFT2X4u}=TRUE()`,
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       }
     );
 
@@ -24,16 +19,14 @@ async function getArticles() {
 
     const data = await response.json();
     
-    return data.records
-      .filter((record: any) => record.fields['publié ?'])
-      .map((record: any) => ({
-        id: record.id,
-        title: record.fields['Article Title'] || 'Sans titre',
-        slug: record.fields['Article Slug'] || '',
-        image: record.fields['Article Image']?.[0]?.url || '',
-        description: record.fields['Article Description'] || '',
-        createdDate: record.fields['Creation Date'],
-      }));
+    return data.records.map((record: any) => ({
+      id: record.id,
+      title: record.fields['fld3c9vJy2oIvdIqy'] || 'Sans titre',
+      slug: record.fields['fldYJ4kaK7s9ucdX9'] || '',
+      image: record.fields['fldyZ3OzonLU7HBfr']?.[0]?.url || '',
+      description: record.fields['fldEugHQt0Miv5F4C'] || '',
+      createdDate: record.fields['fld1HKdhhUO1dUiwJ'],
+    }));
   } catch (error) {
     console.error('Error fetching articles:', error);
     return [];

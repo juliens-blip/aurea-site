@@ -6,10 +6,7 @@ async function getArticleBySlug(slug: string) {
   const tableId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_TABLE_ID;
   const token = process.env.NEXT_PUBLIC_AIRTABLE_TOKEN;
 
-  if (!baseId || !tableId || !token) {
-    console.error('Missing Airtable config');
-    return null;
-  }
+  if (!baseId || !tableId || !token) return null;
 
   try {
     const response = await fetch(
@@ -24,33 +21,31 @@ async function getArticleBySlug(slug: string) {
     const data = await response.json();
     
     const record = data.records.find((r: any) => {
-      const articleSlug = r.fields['Article Slug'] || '';
+      const articleSlug = r.fields['fldYJ4kaK7s9ucdX9'] || '';
       return articleSlug === slug;
     });
 
     if (!record) return null;
 
     const fields = record.fields;
-    const contentRaw = fields['Article Content'] || '{}';
+    const contentRaw = fields['fld8w7490FqthaqyS'] || '{}';
     
     let content;
     try {
       content = typeof contentRaw === 'string' ? JSON.parse(contentRaw) : contentRaw;
     } catch (e) {
-      console.error('JSON parse error:', e);
       content = { sections: [] };
     }
 
     return {
-      title: fields['Article Title'] || 'Sans titre',
-      description: fields['Article Description'] || '',
-      image: fields['Article Image']?.[0]?.url || '',
+      title: fields['fld3c9vJy2oIvdIqy'] || 'Sans titre',
+      description: fields['fldEugHQt0Miv5F4C'] || '',
+      image: fields['fldyZ3OzonLU7HBfr']?.[0]?.url || '',
       content: content,
       slug: slug,
-      date: fields['Creation Date'],
+      date: fields['fld1HKdhhUO1dUiwJ'],
     };
   } catch (error) {
-    console.error('Error:', error);
     return null;
   }
 }
