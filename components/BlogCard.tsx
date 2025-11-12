@@ -17,7 +17,9 @@ function normSlug(s: string) {
 
 export default function BlogCard({ title, slug, image, description, createdDate }: BlogCardProps) {
   const safeSlug = normSlug(slug);
-  const href = safeSlug ? `/blog/${encodeURIComponent(safeSlug)}` : undefined;
+  
+  // ❌ N'encode PAS le slug — Next.js le fera automatiquement
+  const href = safeSlug ? `/blog/${safeSlug}` : undefined;
 
   const dateLabel = (() => {
     try {
