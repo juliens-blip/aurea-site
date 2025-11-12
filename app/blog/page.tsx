@@ -1,41 +1,50 @@
 import BlogCard from '@/components/BlogCard';
 
-async function getArticles() {
-  const baseId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_BASE_ID;
-  const tableId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_TABLE_ID;
-  const token = process.env.NEXT_PUBLIC_AIRTABLE_TOKEN;
+const BASE_ID = process.env.AIRTABLE_BLOG_BASE_ID;
+const TABLE_ID = process.env.AIRTABLE_BLOG_TABLE_ID;
+const TOKEN   = process.env.AIRTABLE_TOKEN;
 
-  if (!baseId || !tableId || !token) return [];
+function normSlug(s: string | undefined) {
+  return (s ?? '').trim().replaceAll('"','').toLowerCase();
+}
+
+async function getArticles() {
+  if (!BASE_ID || !TABLE_ID || !TOKEN) return [];
+
+  // publié ? = TRUE(), tri par date de création DESC
+  const url =
+  `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}` +
+  `?filterByFormula=${encodeURIComponent('{fldQmFBZzcMFT2X4u}=TRUE()')}` +
+  `&sort%5B0%5D%5Bfield%5D=fld1HKdhhUO1dUiwJ&sort%5B0%5D%5Bdirection%5D=desc` +
+  `&pageSize=50` +
+  `&returnFieldsByFieldId=true`;   // ✅ AJOUT
 
   try {
-    const response = await fetch(
-      `https://api.airtable.com/v0/${baseId}/${tableId}?filterByFormula={fldQmFBZzcMFT2X4u}=TRUE()`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    const response = await fetch(url, {
+      headers: { Authorization: `Bearer ${TOKEN}` },
+      cache: 'no-store',
+    });
 
     if (!response.ok) return [];
-
     const data = await response.json();
-    
-    return data.records.map((record: any) => ({
-      id: record.id,
-      title: record.fields['fld3c9vJy2oIvdIqy'] || 'Sans titre',
-      slug: record.fields['fldYJ4kaK7s9ucdX9'] || '',
-      image: record.fields['fldyZ3OzonLU7HBfr']?.[0]?.url || '',
-      description: record.fields['fldEugHQt0Miv5F4C'] || '',
-      createdDate: record.fields['fld1HKdhhUO1dUiwJ'],
+
+    return (data.records ?? []).map((r: any) => ({
+      id: r.id,
+      title: r.fields['fld3c9vJy2oIvdIqy'] || 'Sans titre',
+      slug: normSlug(r.fields['fldYJ4kaK7s9ucdX9']),
+      image: r.fields['fldyZ3OzonLU7HBfr']?.[0]?.url || '',
+      description: r.fields['fldEugHQt0Miv5F4C'] || '',
+      createdDate: r.fields['fld1HKdhhUO1dUiwJ'],
     }));
-  } catch (error) {
-    console.error('Error fetching articles:', error);
+  } catch (e) {
+    console.error('Error fetching articles:', e);
     return [];
   }
 }
 
 export const metadata = {
   title: 'Blog AURÉA - Articles SEO & Automation',
-  description: 'Découvrez nos articles sur l\'automatisation marketing et l\'IA pour marques de luxe',
+  description: "Découvrez nos articles sur l'automatisation marketing et l'IA pour marques de luxe",
 };
 
 export default async function BlogPage() {
@@ -50,7 +59,7 @@ export default async function BlogPage() {
 
       {articles.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-          <p>Aucun article pour le moment. Revenez bientôt!</p>
+          <p>Aucun article pour le moment. Revenez bientôt !</p>
         </div>
       ) : (
         <div style={{

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface BlogCardProps {
   title: string;
@@ -10,44 +11,70 @@ interface BlogCardProps {
   createdDate: string;
 }
 
+function normSlug(s: string) {
+  return (s ?? '').trim().replaceAll('"','').toLowerCase();
+}
+
 export default function BlogCard({ title, slug, image, description, createdDate }: BlogCardProps) {
-  return (
-    <Link href={`/blog/${slug}`}>
-      <div style={{
+  const safeSlug = normSlug(slug);
+  const href = safeSlug ? `/blog/${encodeURIComponent(safeSlug)}` : undefined;
+
+  const dateLabel = (() => {
+    try {
+      return new Date(createdDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+    } catch { return createdDate; }
+  })();
+
+  const Card = (
+    <div
+      role={href ? 'article' : 'group'}
+      aria-disabled={!href}
+      style={{
         border: '1px solid #ddd',
-        borderRadius: '8px',
+        borderRadius: '12px',
         overflow: 'hidden',
-        cursor: 'pointer',
-        transition: 'transform 0.3s, box-shadow 0.3s',
         backgroundColor: '#fff',
+        cursor: href ? 'pointer' : 'default',
+        transition: 'transform .3s, box-shadow .3s',
+        boxShadow: '0 0 0 rgba(0,0,0,0)',
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'translateY(-5px)';
-        e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
+        e.currentTarget.style.transform = href ? 'translateY(-5px)' : 'none';
+        e.currentTarget.style.boxShadow = href ? '0 10px 30px rgba(0,0,0,0.1)' : '0 0 0 rgba(0,0,0,0)';
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = '0 0px 0px rgba(0,0,0,0)';
-      }}>
-        {image && (
-          <img 
-            src={image} 
-            alt={title}
-            style={{ width: '100%', height: '200px', objectFit: 'cover' }}
-          />
-        )}
-        <div style={{ padding: '20px' }}>
-          <h2 style={{ fontSize: '1.3rem', marginBottom: '10px', color: '#0B1B2B' }}>
-            {title}
-          </h2>
-          <p style={{ color: '#666', marginBottom: '10px', minHeight: '40px' }}>
-            {description}
-          </p>
-          <small style={{ color: '#999' }}>
-            {createdDate}
-          </small>
-        </div>
+        e.currentTarget.style.boxShadow = '0 0 0 rgba(0,0,0,0)';
+      }}
+    >
+      {image ? (
+        <Image
+          src={image}
+          alt={title}
+          width={1200}
+          height={630}
+          style={{ width: '100%', height: '200px', objectFit: 'cover' }}
+          priority={false}
+        />
+      ) : null}
+
+      <div style={{ padding: '20px' }}>
+        <h2 style={{ fontSize: '1.2rem', marginBottom: '10px', color: '#0B1B2B', lineHeight: 1.25 }}>
+          {title}
+        </h2>
+        <p style={{ color: '#555', marginBottom: '12px', minHeight: '40px' }}>
+          {description}
+        </p>
+        <small style={{ color: '#888' }}>{dateLabel}</small>
       </div>
+    </div>
+  );
+
+  return href ? (
+    <Link href={href} prefetch>
+      {Card}
     </Link>
+  ) : (
+    Card
   );
 }

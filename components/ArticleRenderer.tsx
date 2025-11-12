@@ -6,13 +6,15 @@ interface Section {
 }
 
 interface ArticleContent {
-  sections: Section[];
+  sections?: Section[];
 }
 
 export default function ArticleRenderer({ content }: { content: ArticleContent }) {
+  const sections = Array.isArray(content?.sections) ? content.sections : [];
+
   return (
     <div style={{ maxWidth: '900px', margin: '0 auto', padding: '20px' }}>
-      {content.sections.map((section, idx) => {
+      {sections.map((section, idx) => {
         switch (section.type) {
           case 'header':
             return (
@@ -94,7 +96,7 @@ export default function ArticleRenderer({ content }: { content: ArticleContent }
                 <div style={{ color: '#1565c0', fontWeight: '600', marginBottom: '15px', fontSize: '1.2rem' }}>
                   💡 {section.title}
                 </div>
-                {section.items.map((item: string, i: number) => (
+                {section.items?.map((item: string, i: number) => (
                   <p key={i} style={{ margin: '8px 0', color: '#37474f' }}>
                     • {item}
                   </p>
@@ -142,7 +144,7 @@ export default function ArticleRenderer({ content }: { content: ArticleContent }
                     fontSize: '1.8rem',
                     marginBottom: '25px',
                     paddingBottom: '15px',
-                    borderBottom: '2px solid #e3f2fd',
+                    borderBottom: '2px solid #e3f2fd', // ✅ corrigé
                     fontWeight: '600',
                   }}
                 >
@@ -176,7 +178,7 @@ export default function ArticleRenderer({ content }: { content: ArticleContent }
                   {section.title}
                 </h4>
                 <ul style={{ listStyle: 'none', padding: 0 }}>
-                  {section.items.map((item: string, i: number) => (
+                  {section.items?.map((item: string, i: number) => (
                     <li
                       key={i}
                       style={{

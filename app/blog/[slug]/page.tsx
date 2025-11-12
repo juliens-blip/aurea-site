@@ -1,78 +1,79 @@
 import { Metadata } from 'next';
 import ArticleRenderer from '@/components/ArticleRenderer';
 
-async function getArticleBySlug(slug: string) {
-  const baseId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_BASE_ID;
-  const tableId = process.env.NEXT_PUBLIC_AIRTABLE_BLOG_TABLE_ID;
-  const token = process.env.NEXT_PUBLIC_AIRTABLE_TOKEN;
+const BASE_ID = process.env.AIRTABLE_BLOG_BASE_ID;
+const TABLE_ID = process.env.AIRTABLE_BLOG_TABLE_ID;
+const TOKEN   = process.env.AIRTABLE_TOKEN;
 
-  if (!baseId || !tableId || !token) return null;
+function normSlug(s: string | undefined) {
+  return (s ?? '').trim().replaceAll('"', '').toLowerCase();
+}
+
+// Airtable attend que les quotes simples soient doublées pour être échappées.
+function airtableEscape(str: string) {
+  return str.replace(/'/g, "''");
+}
+
+async function getArticleBySlug(slug: string) {
+  if (!BASE_ID || !TABLE_ID || !TOKEN) return null;
+
+  const wanted = normSlug(slug);
+  // On normalise aussi le champ côté Airtable : TRIM + LOWER + on retire les guillemets potentiels.
+  const formula =
+    `FIND('${airtableEscape(wanted)}', LOWER(SUBSTITUTE(TRIM({fldYJ4kaK7s9ucdX9}), '"','')))`;
+
+  const url =
+    `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}` +
+    `?maxRecords=1&filterByFormula=${encodeURIComponent(formula)}` +
+    `&returnFieldsByFieldId=true`;
 
   try {
-    const response = await fetch(
-      `https://api.airtable.com/v0/${baseId}/${tableId}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    const response = await fetch(url, {
+      headers: { Authorization: `Bearer ${TOKEN}` },
+      cache: 'no-store',
+    });
 
-    if (!response.ok) return null;
-    
+    if (!response.ok) {
+      console.error('Airtable status', response.status);
+      return null;
+    }
     const data = await response.json();
-    
-    console.log('=== DEBUG ===');
-    console.log('Slug cherché:', slug);
-    console.log('Articles trouvés:', data.records.length);
-    
-    data.records.forEach((r: any, i: number) => {
-      const articleSlug = r.fields['fldYJ4kaK7s9ucdX9'] || '';
-      console.log(`Article ${i}:`, {
-        title: r.fields['fld3c9vJy2oIvdIqy'],
-        slug: articleSlug,
-        match: articleSlug === slug
-      });
-    });
-    
-    const record = data.records.find((r: any) => {
-      const articleSlug = r.fields['fldYJ4kaK7s9ucdX9'] || '';
-      return articleSlug === slug;
-    });
 
-    if (!record) {
-      console.log('❌ Article NOT FOUND');
+    if (!data.records || data.records.length === 0) {
+      console.warn('No record matched slug:', wanted);
       return null;
     }
 
-    console.log('✅ Article FOUND');
+    const record = data.records[0];
+    const f = record.fields ?? {};
 
-    const fields = record.fields;
-    const contentRaw = fields['fld8w7490FqthaqyS'] || '{}';
-    
-    let content;
+    // Parse du contenu JSON
+    const contentRaw = f['fld8w7490FqthaqyS'] || '{}';
+    let content: any = { sections: [] };
     try {
       content = typeof contentRaw === 'string' ? JSON.parse(contentRaw) : contentRaw;
-    } catch (e) {
+    } catch {
       content = { sections: [] };
     }
 
     return {
-      title: fields['fld3c9vJy2oIvdIqy'] || 'Sans titre',
-      description: fields['fldEugHQt0Miv5F4C'] || '',
-      image: fields['fldyZ3OzonLU7HBfr']?.[0]?.url || '',
-      content: content,
-      slug: slug,
-      date: fields['fld1HKdhhUO1dUiwJ'],
+      title: f['fld3c9vJy2oIvdIqy'] || 'Sans titre',
+      description: f['fldEugHQt0Miv5F4C'] || '',
+      image: f['fldyZ3OzonLU7HBfr']?.[0]?.url || '',
+      content,
+      slug: normSlug(f['fldYJ4kaK7s9ucdX9']),
+      date: f['fld1HKdhhUO1dUiwJ'],
     };
-  } catch (error) {
-    console.error('Error:', error);
+  } catch (e) {
+    console.error('Airtable error:', e);
     return null;
   }
 }
 
-export async function generateMetadata({ params }: any): Promise<Metadata> {
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const article = await getArticleBySlug(params.slug);
   if (!article) return { title: 'Article non trouvé' };
-
   return {
     title: `${article.title} | Blog AURÉA`,
     description: article.description,
