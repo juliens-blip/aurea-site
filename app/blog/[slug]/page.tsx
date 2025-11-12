@@ -5,6 +5,14 @@ const BASE_ID = process.env.AIRTABLE_BLOG_BASE_ID;
 const TABLE_ID = process.env.AIRTABLE_BLOG_TABLE_ID;
 const TOKEN   = process.env.AIRTABLE_TOKEN;
 
+// Helper: Normalise les URLs Dropbox (partagées → directes)
+function normalizeDropboxUrl(u?: string) {
+  if (!u) return '';
+  return u
+    .replace('www.dropbox.com', 'dl.dropboxusercontent.com')
+    .replace('dl=0', 'raw=1');
+}
+
 function normSlug(s: string | undefined) {
   return (s ?? '').trim().replaceAll('"', '').toLowerCase();
 }
@@ -47,6 +55,13 @@ async function getArticleBySlug(slug: string) {
     const record = data.records[0];
     const f = record.fields ?? {};
 
+    // Gestion de l'image : string (URL) OR attachement[]
+    const imgField = f['fldyZ3OzonLU7HBfr'];
+    const image =
+      typeof imgField === 'string'
+        ? normalizeDropboxUrl(imgField)
+        : imgField?.[0]?.url || '';
+
     // Parse du contenu JSON
     const contentRaw = f['fld8w7490FqthaqyS'] || '{}';
     let content: any = { sections: [] };
@@ -59,7 +74,7 @@ async function getArticleBySlug(slug: string) {
     return {
       title: f['fld3c9vJy2oIvdIqy'] || 'Sans titre',
       description: f['fldEugHQt0Miv5F4C'] || '',
-      image: f['fldyZ3OzonLU7HBfr']?.[0]?.url || '',
+      image, // ← maintenant URL Dropbox ou attachement Airtable
       content,
       slug: normSlug(f['fldYJ4kaK7s9ucdX9']),
       date: f['fld1HKdhhUO1dUiwJ'],

@@ -4,6 +4,14 @@ const BASE_ID = process.env.AIRTABLE_BLOG_BASE_ID;
 const TABLE_ID = process.env.AIRTABLE_BLOG_TABLE_ID;
 const TOKEN   = process.env.AIRTABLE_TOKEN;
 
+// Helper: Normalise les URLs Dropbox (partagées → directes)
+function normalizeDropboxUrl(u?: string) {
+  if (!u) return '';
+  return u
+    .replace('www.dropbox.com', 'dl.dropboxusercontent.com')
+    .replace('dl=0', 'raw=1');
+}
+
 function normSlug(s: string | undefined) {
   return (s ?? '').trim().replaceAll('"','').toLowerCase();
 }
@@ -28,14 +36,22 @@ async function getArticles() {
     if (!response.ok) return [];
     const data = await response.json();
 
-    return (data.records ?? []).map((r: any) => ({
-      id: r.id,
-      title: r.fields['fld3c9vJy2oIvdIqy'] || 'Sans titre',
-      slug: normSlug(r.fields['fldYJ4kaK7s9ucdX9']),
-      image: r.fields['fldyZ3OzonLU7HBfr']?.[0]?.url || '',
-      description: r.fields['fldEugHQt0Miv5F4C'] || '',
-      createdDate: r.fields['fld1HKdhhUO1dUiwJ'],
-    }));
+    return (data.records ?? []).map((r: any) => {
+      const imgField = r.fields['fldyZ3OzonLU7HBfr']; // peut être string (URL) ou attachment[]
+      const image =
+        typeof imgField === 'string'
+          ? normalizeDropboxUrl(imgField)
+          : imgField?.[0]?.url || '';
+
+      return {
+        id: r.id,
+        title: r.fields['fld3c9vJy2oIvdIqy'] || 'Sans titre',
+        slug: normSlug(r.fields['fldYJ4kaK7s9ucdX9']),
+        image,
+        description: r.fields['fldEugHQt0Miv5F4C'] || '',
+        createdDate: r.fields['fld1HKdhhUO1dUiwJ'],
+      };
+    });
   } catch (e) {
     console.error('Error fetching articles:', e);
     return [];
