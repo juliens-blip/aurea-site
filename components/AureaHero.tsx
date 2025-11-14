@@ -4,20 +4,21 @@ import styles from './AureaHero.module.css';
 export default function AureaHero() {
   return (
     <div className={styles.aureaHero} id="aureaHero">
-      <video 
+      <video
         className={styles.aureaVideo}
-        autoPlay 
-        muted 
-        loop 
+        autoPlay
+        muted
+        loop
         playsInline
         preload="auto"
       >
         <source
-     src="https://res.cloudinary.com/dwzyhcbxg/video/upload/v1762159965/202510201238_1_s58oak.mp4"
-     type="video/mp4"
-   />
+          src="https://res.cloudinary.com/dwzyhcbxg/video/upload/q_80,w_1920,c_fill/v1763112626/202511141015_1_ackp2r.mp4"
+          type="video/mp4"
+        />
+        Votre navigateur ne supporte pas la vidéo HTML5
       </video>
-      
+
       <div className={styles.aureaOverlay} />
 
       <div className={styles.aureaContent}>
