@@ -31,13 +31,13 @@
 }
 
 .navbarLogo {
-  height: 60px; /* Augmenté de 52px à 60px */
+  height: 90px; /* Agrandi pour plus de présence */
   transition: all 0.3s ease;
   flex-shrink: 0;
 }
 
 .navbar.scrolled .navbarLogo {
-  height: 50px; /* Augmenté de 44px à 50px */
+  height: 70px; /* Taille réduite au scroll mais toujours visible */
 }
 
 .navbarLogo img {
@@ -327,11 +327,11 @@
 
 @media (max-width: 640px) {
   .navbarLogo {
-    height: 48px; /* Augmenté de 42px à 48px */
+    height: 65px; /* Augmenté pour mobile */
   }
 
   .navbar.scrolled .navbarLogo {
-    height: 42px; /* Augmenté de 38px à 42px */
+    height: 55px; /* Taille au scroll sur mobile */
   }
 
   .navbarMenu {
